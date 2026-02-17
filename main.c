@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/17 18:07:06 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/17 20:04:59 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,38 +71,22 @@ Fill the node (type = T_PIPE, value = "|", etc.).
 Call ft_add_token_back(&data->tokens, new_node);.
 */
 
-
-void ft_add_token_back(t_token **tokens, t_token *new_node)
+void ft_add_token(t_token **tokens, t_token *new_token)
 {
-    t_token *temp;
+	t_token *temp;
 
-    if (!new_node)
-        return ;
-    if (!*tokens) // If the train is empty
-    {
-        *tokens = new_node;
-        return ;
-    }
-    temp = *tokens;
-    while (temp->next) // Find the last car
-        temp = temp->next;
-    temp->next = new_node; // Hook the new car onto the back
+	if (!new_token) //dont need as i check !new_token after I malloced it //but maybe if other functions dont check for NULL before passing?
+		return;
+	if (!*tokens) // If the train is empty
+	{
+		*tokens = new_token;
+		return;
+	}
+	temp = *tokens; //if we loop through *tokens, we will lose the pointer
+	while (temp->next) // while temp->next != NULL
+		temp = temp->next;
+	temp->next = new_token; //each new_token has NULL in theirs ->next
 }
-
-/*void ft_token_word(t_data *data, char **cursor)
-{
-    int     len;
-    char    *word_val;
-    t_token *new_node;
-
-    
-    // 2. Create and Add the token
-
-
-    // 3. PUSH the cursor forward by the amount of characters we just 'ate'
-    *cursor += len;
-}*/
-
 
 t_token *ft_new_token(char *value, t_token_type type)
 {
@@ -111,7 +95,7 @@ t_token *ft_new_token(char *value, t_token_type type)
 	new = malloc(sizeof(t_token));
 	if (!new)
 		return (printf("minishell: malloc has failed\n"), NULL);
-	new->value = value; // We assume 'value' was already malloc'd (like by ft_substr)
+	new->value = value; // check that value was malloced before
 	new->type = type;
 	new->quote = Q_NONE; // Default value
 	new->next = NULL;
@@ -133,8 +117,12 @@ int	ft_token_word(t_data *data, char **cursor)
 	
 	new_token = ft_new_token(word, T_WORD);
 	if (!new_token)
+	{	
+		free(word);
 		return (1);
-    ft_add_token_back(&(data->tokens), new_node);
+	}
+    ft_add_token(&data->tokens, new_token);
+	
     *cursor += i; 
 
 	return (0);
@@ -161,6 +149,7 @@ int	ft_lexing(t_data *data)
 		{
 			ft_token_redir(data, &cursor); //start a redirect token
 		}
+		//add quotes here
 		else
 		{
 			//since we send an address of a cursor and parce through prompt, the pointer moves to the right position
@@ -179,15 +168,46 @@ int	ft_proccess_prompt(t_data *data)
 	{
 		return (1);
 	}
-	
 	return (0);
 }
 
 
 void	ft_free(t_data *data)
 {
+	t_token temp;
+	
+	void ft_free_data(t_data *data)
+{
+    t_token *current;
+    t_token *next_node;
+
+    if (!data)
+        return;
+    
+    // 1. Manually loop through and free the Token List
+    current = data->tokens;
+    while (current)
+    {
+        next_node = current->next; // Save address of next node
+        if (current->value)
+            free(current->value);  // Free the string (the 'word')
+        free(current);             // Free the struct node itself
+        current = next_node;       // Move to the next saved address
+    }
+    data->tokens = NULL;           // Reset head to NULL
+
+    // 2. Free the prompt string
+    if (data->prompt)
+    {
+        free(data->prompt);
+        data->prompt = NULL;
+    }
+}
+	
 	if (data->prompt)
 		free(data->prompt);
+	
+		
 }
 
 void	ft_init(char **envp, t_data *data)
