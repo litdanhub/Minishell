@@ -2,9 +2,8 @@ NAME = minishell
 
 CC = cc
 #CFLAGS = -Wall -Wextra -Werror
-#CFLAGS = -Wall -Wextra -Werror -g3 -O0 -fsanitize=address,undefined -fno-omit-frame-pointer #delete it
-CFLAGS = -Wall -Wextra -Werror -g#delete it
-
+CFLAGS = -Wall -Wextra -Werror -g3 -O0 -fsanitize=address,undefined -fno-omit-frame-pointer #delete it
+#CFLAGS = -Wall -Wextra -Werror -g
 
 LIBRL = -lreadline
 LIBFT_DIR = ./libft

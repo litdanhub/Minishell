@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/12 16:05:19 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/15 11:00:17 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,11 +84,12 @@ typedef struct s_env
 
 typedef struct s_data 
 {
-	char	*prompt;
-	t_env	*env;          // linked list envp
-	t_token	*tokens;       // token list from lexer
-	t_cmd	*cmds;         // parsed commands (pipeline)
-	int		last_status;   // same as g_status but stored locally
+	char			*prompt;
+	t_env			*env;          // linked list envp
+	t_token			*tokens;       // token list from lexer
+	t_cmd			*cmds;         // parsed commands (pipeline)
+	t_quote_type	quote_type; //do i need it?
+	int				last_status;   // same as g_status but stored locally
 }	t_data;
 
 
