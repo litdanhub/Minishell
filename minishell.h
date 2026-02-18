@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/15 11:00:17 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/18 13:19:44 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,6 @@ typedef enum e_quote_type
 	Q_DOUBLE
 }	t_quote_type;
 
-typedef struct s_token
-{
-	t_token_type		type;
-	char				*value;
-	t_quote_type		quote;   // useful for expansion logic
-	struct s_token		*next;
-}	t_token;
-
-
 typedef struct s_redir
 {
 	t_token_type		type;     // IN / OUT / APPEND / HEREDOC
@@ -61,7 +52,6 @@ typedef struct s_redir
 	int					fd;       // opened fd (if needed)
 	struct s_redir		*next;
 }	t_redir;
-
 
 typedef struct s_cmd
 {
@@ -73,7 +63,6 @@ typedef struct s_cmd
 	struct s_cmd	*next;      // next command in pipeline
 }	t_cmd;
 
-
 typedef struct s_env
 {
 	char			*key;
@@ -81,6 +70,13 @@ typedef struct s_env
 	struct s_env	*next;
 }	t_env;
 
+typedef struct s_token
+{
+	t_token_type		type;
+	char				*value;
+	t_quote_type		quote;   // useful for expansion logic
+	struct s_token		*next;
+}	t_token;
 
 typedef struct s_data 
 {
@@ -91,7 +87,5 @@ typedef struct s_data
 	t_quote_type	quote_type; //do i need it?
 	int				last_status;   // same as g_status but stored locally
 }	t_data;
-
-
 
 #endif
