@@ -6,31 +6,29 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:20:11 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/19 16:03:19 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/19 16:08:32 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void ft_free(t_data *data)
+void ft_free(t_data *data) //free allocated memory from readline and tokens
 {
 	t_token *current;
 	t_token *next_node;
 
 	if (!data)
 		return;
-
 	current = data->tokens;
 	while (current)
 	{
-		next_node = current->next; //Save address of next node
+		next_node = current->next;
 		if (current->value)
-			free(current->value); //Free the string (the 'word')
-		free(current);			  //Free the struct node itself
-		current = next_node;	  //Move to the next saved address
+			free(current->value); //free value (lile "word") allocation
+		free(current); //free the struct node itself
+		current = next_node; //go to next node
 	}
-	data->tokens = NULL; //Reset head to NULL
-
+	data->tokens = NULL;
 	if (data->prompt)
 	{
 		free(data->prompt);
@@ -40,7 +38,7 @@ void ft_free(t_data *data)
 
 void	ft_init(char **envp, t_data *data)
 {
-	(void) envp;//add parcing envp
+	(void) envp;//add parsing envp
 	
 	//add more vars to initialize
 	data->prompt = NULL;
