@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/19 17:29:09 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/19 20:22:10 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ typedef enum e_token_type
 {
 	T_WORD	= 0,
 	T_PIPE,
-	T_REDIR_IN,
-	T_REDIR_OUT,
-	T_REDIR_APPEND,
-	T_HEREDOC
+	T_REDIR_IN, //<
+	T_REDIR_OUT,//>
+	T_REDIR_APPEND,//>>
+	T_HEREDOC//<<
 }	t_token_type;
 
 typedef enum e_quote_type
@@ -88,8 +88,12 @@ typedef struct s_data
 
 //UTILS
 //utils.c
-void	ft_init(char **envp, t_data *data);
+void	ft_init(t_data *data);
 void	ft_free(t_data *data);
+void	ft_print_error(char *msg);
+int		ft_init_envp(t_data *data, char **envp);
+
+
 
 //PARCER
 //lexer.c

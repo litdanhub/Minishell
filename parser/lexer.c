@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/19 17:41:11 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/19 17:54:36 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ t_token	*ft_new_token(char *value, t_token_type type)
 
 	new = malloc(sizeof(t_token));
 	if (!new)
-		return (printf("minishell: malloc has failed\n"), NULL);
+		return (perror("malloc"), NULL);
 	new->value = value;
 	new->type = type;
 	new->quote = Q_NONE; //Default value
@@ -84,7 +84,7 @@ int	ft_token_word(t_data *data, char **cursor)
 		i++; //the length of the word
 	word = ft_substr(*cursor, 0, i);
 	if (!word)
-		return (printf("minishell: malloc has failed\n"), 1);
+		return (perror("malloc"), 1);
 	new_token = ft_new_token(word, T_WORD);
 	if (!new_token)
 	{
@@ -101,7 +101,7 @@ static int	ft_token_redir_help(t_data *data, char *word, t_token_type type)
 	t_token			*new_token;
 
 	if (!word)
-		return (printf("minishell: malloc has failed\n"), 1);
+		return (perror("malloc"), 1);
 	new_token = ft_new_token(word, type);
 	if (!new_token)
 	{
@@ -173,7 +173,7 @@ int	ft_token_pipe(t_data *data, char **cursor)
 	i = 0;
 	word = ft_strdup("|");
 	if (!word)
-		return (printf("minishell: malloc has failed\n"), 1);
+		return (perror("malloc"), 1);
 	i++;
 	new_token = ft_new_token(word, T_PIPE);
 	if (!new_token)

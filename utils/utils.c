@@ -6,11 +6,28 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:20:11 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/19 17:30:07 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/19 20:52:57 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+void	ft_init(t_data *data)
+{
+	//add more vars to initialize
+	data->prompt = NULL;
+	data->env = NULL;
+	data->tokens = NULL;
+	data->cmds = NULL;
+	data->last_status = 0;
+}
+
+void	ft_print_error(char *msg)
+{
+	write(2, "minishell: ", 11);
+	write(2, msg, ft_strlen(msg));
+	write(2, "\n", 1);
+}
 
 void	ft_free(t_data *data) //free allocated memory from readline and tokens
 {
@@ -36,13 +53,64 @@ void	ft_free(t_data *data) //free allocated memory from readline and tokens
 	}
 }
 
-void	ft_init(char **envp, t_data *data)
+t_env	*ft_new_env(char *key, char *value)
 {
-	(void) envp;//add parsing envp
-	//add more vars to initialize
-	data->prompt = NULL;
-	data->env = NULL;
-	data->tokens = NULL;
-	data->cmds = NULL;
-	data->last_status = 0;
+	t_env	*new;
+
+	new = malloc(sizeof(t_env));
+	if (!new)
+		return (perror("malloc"), NULL);
+	new->key = key;
+	new->value = value;
+	new->next = NULL;
+	return (new);
+}
+
+void	ft_add_env_node(t_env **env, t_env *new_node)
+{
+	t_env	*temp;
+
+	if (!new_node)
+		return ;
+	if (!*env)
+	{
+		*env = new_node;
+		return ;
+	}
+	temp = *env;
+	while (temp->next)
+		temp = temp->next;
+	temp->next = new_node;
+}
+
+int	ft_init_envp(t_data *data, char **envp)
+{
+	int		i;
+	char	*value;
+	char	*tmp;
+	char	*key;
+	t_env	*new_env;
+		
+	i = 0;
+	if (!envp || !envp[0]) //was run env -i ./minishell
+	{
+		//need just PWD, SHLVL=1 and _
+		//PWD: getcwd() to get the current working directory
+		//SHLVL: SHLVL should be 1
+		//_ (underscore): absolute path of the running shell
+	}
+	else //parse and increament SHLVL +1
+	{
+		while (envp[i])
+		{
+			printf("%s\n", envp[i]);
+			tmp = ft_strchr(envp[i], '=') + 1; //if (!tmp) protect and store the whole line
+			value = ft_strdup(tmp); //if (!value) protect
+			key = ft_substr(envp[i], 0, ft_strlen(envp[i]) - ft_strlen(value) - 1); //if (!key) protect
+			new_env = ft_new_env(key, value); //if (!new_env) free (key) return1
+			ft_add_env_node(&data->env, new_env);
+			i++;
+		}
+	}
+	return (0);
 }
