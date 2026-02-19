@@ -6,13 +6,13 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/19 16:24:54 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/19 16:27:11 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	ft_print_tokens(t_data *data) //delete
+void	ft_print_tokens(t_data *data) //delete after use
 {
 	t_token *tmp;
 
