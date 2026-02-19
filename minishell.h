@@ -6,28 +6,26 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/18 13:19:44 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/19 15:38:23 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "./libft/libft.h"
-
-# include <stdio.h> //readline
+//check lib before adding
+# include "./libft/libft.h" //stdlib.h <stdint.h> <unistd.h>
+# include <stdio.h> //readline, printf
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <fcntl.h> //open
+# include <sys/types.h> //open, fork
+# include <sys/wait.h> //wait
+# include <string.h> //strerror
+# include <errno.h> //perror
+# include <signal.h> //signal
 
-# include <unistd.h>//do i need all these libs?
-# include <fcntl.h>
-# include <sys/types.h>
-# include <sys/wait.h>
-# include <string.h>
-# include <errno.h>
-
-//IF CHANGE STRUCTS ADD IN FT_INIT
-
+//if add new vars, initialize it in ft_init
 typedef enum e_token_type
 {
 	T_WORD,
@@ -74,18 +72,36 @@ typedef struct s_token
 {
 	t_token_type		type;
 	char				*value;
-	t_quote_type		quote;   // useful for expansion logic
+	t_quote_type		quote;
 	struct s_token		*next;
 }	t_token;
 
 typedef struct s_data 
 {
 	char			*prompt;
-	t_env			*env;          // linked list envp
-	t_token			*tokens;       // token list from lexer
-	t_cmd			*cmds;         // parsed commands (pipeline)
-	t_quote_type	quote_type; //do i need it?
-	int				last_status;   // same as g_status but stored locally
+	t_env			*env;
+	t_token			*tokens;
+	t_cmd			*cmds;
+	t_quote_type	quote_type;
+	int				last_status; //last exit status
 }	t_data;
+
+//UTILS
+//utils.c
+void	ft_init(char **envp, t_data *data);
+void	ft_free(t_data *data);
+
+//PARCER
+//lexer.c
+void	ft_print_tokens(t_data *data); //delete
+int		ft_special_char(char c);
+void	ft_add_node(t_token **tokens, t_token *new_node);
+t_token	*ft_new_token(char *value, t_token_type type);
+int		ft_token_word(t_data *data, char **cursor);
+int		ft_token_redir_in(t_data *data, char **cursor);
+int		ft_token_redir_out(t_data *data, char **cursor);
+int		ft_token_pipe(t_data *data, char **cursor);
+int		ft_lexing(t_data *data);
+int		ft_proccess_prompt(t_data *data);
 
 #endif

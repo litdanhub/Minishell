@@ -1,22 +1,37 @@
 NAME = minishell
 
 CC = cc
-#CFLAGS = -Wall -Wextra -Werror
-CFLAGS = -Wall -Wextra -Werror -g3 -O0 -fsanitize=address,undefined -fno-omit-frame-pointer #delete it
-#CFLAGS = -Wall -Wextra -Werror -g
+#libc readline function leaks. To suppress these leaks run with --suppressions=readline.supp
+#don't use fsanitize with valgrind
 
+#CFLAGS = -Wall -Wextra -Werror -g #delete g flag
+CFLAGS = -Wall -Wextra -Werror -g3 -O0 -fsanitize=address,undefined -fno-omit-frame-pointer
+
+#FILES
+PARSER_DIR = parser/
+PARSER_SRC = $(PARSER_DIR)lexer.c
+
+UTILS_DIR = utils/
+UTILS_SRC = $(UTILS_DIR)utils.c
+
+#BUILTINS_DIR = builtins/
+#BUILTINS_SRC = $(BUILTINS_DIR)
+
+#EXEC_DIR = exec/
+#EXEC_SRC = $(EXEC_DIR)
+
+SRCS = main.c $(PARSER_SRC) $(UTILS_SRC) #$(BUILTINS_SRC) $(EXEC_SRC)
+
+OBJS = $(SRCS:.c=.o)
+
+HEADER = minishell.h
+
+#LIBRARIES
 LIBRL = -lreadline
 LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
-
-SRCS = main.c
-
-HEADER = minishell.h
-
-OBJS = $(SRCS:.c=.o)
-
-
+#RULES
 %.o: %.c $(HEADER)
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -38,4 +53,12 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+#VALGRIND
+VG = valgrind
+VG_FLAGS = --leak-check=full --show-leak-kinds=all --track-origins=yes\
+	--child-silent-after-fork=yes --track-fds=yes --suppressions=readline.supp -s
+
+valgrind: $(NAME)
+	$(VG) $(VG_FLAGS) ./$(NAME)
+
+.PHONY: all clean fclean re valgrind
