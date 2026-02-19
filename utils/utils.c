@@ -6,19 +6,19 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:20:11 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/19 16:08:32 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/19 17:30:07 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void ft_free(t_data *data) //free allocated memory from readline and tokens
+void	ft_free(t_data *data) //free allocated memory from readline and tokens
 {
-	t_token *current;
-	t_token *next_node;
+	t_token	*current;
+	t_token	*next_node;
 
 	if (!data)
-		return;
+		return ;
 	current = data->tokens;
 	while (current)
 	{
@@ -39,7 +39,6 @@ void ft_free(t_data *data) //free allocated memory from readline and tokens
 void	ft_init(char **envp, t_data *data)
 {
 	(void) envp;//add parsing envp
-	
 	//add more vars to initialize
 	data->prompt = NULL;
 	data->env = NULL;
