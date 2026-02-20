@@ -12,19 +12,24 @@ PARSER_DIR = parser/
 PARSER_SRC = $(PARSER_DIR)lexer.c
 
 UTILS_DIR = utils/
-UTILS_SRC = $(UTILS_DIR)utils.c
+UTILS_SRC = $(UTILS_DIR)utils.c \
+	$(UTILS_DIR)free.c
 
-#BUILTINS_DIR = builtins/
-#BUILTINS_SRC = $(BUILTINS_DIR)
+BUILTINS_DIR = builtins/
+BUILTINS_SRC = $(BUILTINS_DIR)env.c
 
 #EXEC_DIR = exec/
 #EXEC_SRC = $(EXEC_DIR)
 
-SRCS = main.c $(PARSER_SRC) $(UTILS_SRC) #$(BUILTINS_SRC) $(EXEC_SRC)
+SRCS = main.c $(PARSER_SRC) $(UTILS_SRC) $(BUILTINS_SRC) #$(EXEC_SRC)
 
 OBJS = $(SRCS:.c=.o)
 
-HEADER = minishell.h
+HEADERS = minishell.h \
+	parser/parser.h \
+	exec/exec.h \
+	builtins/builtins.h \
+	utils/utils.h
 
 #LIBRARIES
 LIBRL = -lreadline
@@ -32,7 +37,7 @@ LIBFT_DIR = ./libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 #RULES
-%.o: %.c $(HEADER)
+%.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 all: $(NAME)

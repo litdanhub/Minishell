@@ -1,31 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   builtins.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 15:20:11 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/20 16:59:23 by dsalimov         ###   ########.fr       */
+/*   Created: 2026/02/20 16:22:25 by dsalimov          #+#    #+#             */
+/*   Updated: 2026/02/20 17:08:04 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
+#ifndef BUILTINS_H
+# define BUILTINS_H
 
-void	ft_init(t_data *data)
-{
-	//add more vars to initialize
-	data->prompt = NULL;
-	data->env = NULL;
-	data->tokens = NULL;
-	data->cmds = NULL;
-	data->last_status = 0;
-}
+# include "../minishell.h"
 
-void	ft_print_error(char *msg)
-{
-	write(2, "minishell: ", 11);
-	write(2, msg, ft_strlen(msg));
-	write(2, "\n", 1);
-}
+//protyping
+int	ft_init_envp(t_data *data, char **envp);
 
+
+#endif

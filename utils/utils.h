@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   utils.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 15:20:11 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/20 16:59:23 by dsalimov         ###   ########.fr       */
+/*   Created: 2026/02/20 16:17:43 by dsalimov          #+#    #+#             */
+/*   Updated: 2026/02/20 17:03:52 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
+#ifndef UTILS_H
+# define UTILS_H
 
-void	ft_init(t_data *data)
-{
-	//add more vars to initialize
-	data->prompt = NULL;
-	data->env = NULL;
-	data->tokens = NULL;
-	data->cmds = NULL;
-	data->last_status = 0;
-}
+# include "../minishell.h"
 
-void	ft_print_error(char *msg)
-{
-	write(2, "minishell: ", 11);
-	write(2, msg, ft_strlen(msg));
-	write(2, "\n", 1);
-}
+//utils.c
+void	ft_init(t_data *data);
+void	ft_print_error(char *msg);
 
+//free.c
+void	ft_free_tokens(t_data *data);
+void	ft_free_prompt(t_data *data);
+void	ft_free_env(t_data *data);
+
+#endif

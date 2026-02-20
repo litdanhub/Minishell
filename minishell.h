@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/20 11:54:37 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/20 16:53:28 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ typedef struct s_cmd //for execve(path, argv, t_env->envp )
 	t_redir			*redirs;// linked list of redirections
 	int				infile;// default STDIN_FILENO
 	int				outfile;// default STDOUT_FILENO
+	int				pipe_flag; //1 pipe, 0 no pipe for this cmd
 	struct s_cmd	*next;// next command in pipeline
 }	t_cmd;
 
@@ -85,25 +86,5 @@ typedef struct s_data
 	t_quote_type	quote_type;
 	int				last_status;//last exit status
 }	t_data;
-
-//UTILS
-//utils.c
-void	ft_init(t_data *data);
-void	ft_free(t_data *data);
-void	ft_print_error(char *msg);
-int		ft_init_envp(t_data *data, char **envp);
-
-//PARCER
-//lexer.c
-void	ft_print_tokens(t_data *data);//delete
-int		ft_special_char(char c);
-void	ft_add_node(t_token **tokens, t_token *new_node);
-t_token	*ft_new_token(char *value, t_token_type type);
-int		ft_token_word(t_data *data, char **cursor);
-int		ft_token_redir_in(t_data *data, char **cursor);
-int		ft_token_redir_out(t_data *data, char **cursor);
-int		ft_token_pipe(t_data *data, char **cursor);
-int		ft_lexing(t_data *data);
-int		ft_proccess_prompt(t_data *data);
 
 #endif
