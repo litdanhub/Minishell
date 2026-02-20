@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:20:11 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/19 20:52:57 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/20 13:36:19 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,14 @@ void	ft_add_env_node(t_env **env, t_env *new_node)
 int	ft_init_envp(t_data *data, char **envp)
 {
 	int		i;
+	int		equal_char;
 	char	*value;
 	char	*tmp;
 	char	*key;
 	t_env	*new_env;
 		
 	i = 0;
+	equal_char = 0;
 	if (!envp || !envp[0]) //was run env -i ./minishell
 	{
 		//need just PWD, SHLVL=1 and _
@@ -99,17 +101,52 @@ int	ft_init_envp(t_data *data, char **envp)
 		//SHLVL: SHLVL should be 1
 		//_ (underscore): absolute path of the running shell
 	}
-	else //parse and increament SHLVL +1
+	else //parse and increament SHLVL +1, if missing or invalid then 1
 	{
 		while (envp[i])
 		{
-			printf("%s\n", envp[i]);
-			tmp = ft_strchr(envp[i], '=') + 1; //if (!tmp) protect and store the whole line
-			value = ft_strdup(tmp); //if (!value) protect
-			key = ft_substr(envp[i], 0, ft_strlen(envp[i]) - ft_strlen(value) - 1); //if (!key) protect
-			new_env = ft_new_env(key, value); //if (!new_env) free (key) return1
+			key = NULL;
+			value = NULL;
+			tmp = ft_strchr(envp[i], '=');
+			if (!tmp) //no "="
+			{
+				key = ft_strdup(envp[i]); //key = the whole line
+				if (!key)
+					return (perror("malloc"), 1);
+				value = NULL; //value = NULL
+			}
+			else
+			{
+				equal_char = tmp - envp[i];
+				key = ft_substr(envp[i], 0, equal_char);
+				value = ft_substr(envp[i], equal_char + 1, ft_strlen(envp[i]) - equal_char - 1);
+				if (!key || !value)
+				{
+					if (key)
+						free (key);
+					if (value)
+						free (value);
+					return (perror("malloc"), 1);
+				}
+			}
+			new_env = ft_new_env(key, value);
+			if (!new_env)
+			{ 
+				if (key)
+					free (key);
+				if (value)
+					free (value);
+				return (1);
+			}
 			ft_add_env_node(&data->env, new_env);
 			i++;
+		}
+		t_env	*temp; //delete
+		temp = data->env;
+		while (temp)
+		{
+			printf("%s | %s\n", temp->key, temp->value);
+			temp = temp->next;
 		}
 	}
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/19 20:23:31 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/20 12:12:56 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	main(int ac, char **av, char **envp) //we need envp
 	ft_init(&data);
 	if (ft_init_envp(&data, envp))
 		return(1);
+	return(0);
 	while (1)
 	{
 		data.prompt = readline("minishell$ ");
