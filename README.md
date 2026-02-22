@@ -35,7 +35,7 @@ Responsible for:
 - dup2
 - redirections
 - heredoc execution (maybe I can do this?)
-- builtins execution
+- builtins execution (done: pwd, env) //$_ shall be updated after each successful command or its last argument
 - env list structure (almost done)
 - exit status handling
 - signals (execution side)

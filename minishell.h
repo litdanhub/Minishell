@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/20 16:53:28 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/22 19:17:59 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <string.h> //strerror
 # include <errno.h> //perror
 # include <signal.h> //signal
+# include <limits.h> //PATH_MAX
 
 typedef enum e_token_type
 {

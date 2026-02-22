@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:58:36 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/20 17:18:50 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/22 22:49:57 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-static void ft_free_key_value(char *key, char *value)
+void ft_free_key_value(char *key, char *value)
 {
 	if (key)
 		free(key);
@@ -37,21 +37,20 @@ void	ft_add_env_node(t_env **env, t_env *new_node)
 	temp->next = new_node;
 }
 
-
 t_env	*ft_new_env(char *key, char *value)
 {
 	t_env	*new;
 
 	new = malloc(sizeof(t_env));
 	if (!new)
-		return (perror("malloc"), NULL);
+		return (perror("minishell: malloc"), NULL);
 	new->key = key;
 	new->value = value;
 	new->next = NULL;
 	return (new);
 }
 
-int	ft_init_envp(t_data *data, char **envp)
+int	ft_init_envp(t_data *data, char **envp, char *argv)
 {
 	int		i;
 	int		equal_char;
@@ -62,12 +61,10 @@ int	ft_init_envp(t_data *data, char **envp)
 		
 	i = 0;
 	equal_char = 0;
-	if (!envp || !envp[0]) //was run env -i ./minishell
+	if (!envp || !envp[0]) //if env -i ./minishell, add PWD, SHLVL and _
 	{
-		//need just PWD, SHLVL=1 and _
-		//PWD: getcwd() to get the current working directory
-		//SHLVL: SHLVL should be 1
-		//_ (underscore): absolute path of the running shell
+		if (ft_no_env(data, argv))
+			return (1);
 	}
 	else //parse and increament SHLVL +1, if missing or invalid then 1
 	{
@@ -80,7 +77,7 @@ int	ft_init_envp(t_data *data, char **envp)
 			{
 				key = ft_strdup(envp[i]); //key = the whole line
 				if (!key)
-					return (perror("malloc"), 1);
+					return (perror("minishell: malloc"), 1);
 				value = NULL; //value = NULL
 			}
 			else
@@ -91,7 +88,7 @@ int	ft_init_envp(t_data *data, char **envp)
 				if (!key || !value)
 				{
 					ft_free_key_value(key, value);
-					return (perror("malloc"), 1);
+					return (perror("minishell: malloc"), 1);
 				}
 			}
 			new_env = ft_new_env(key, value);
@@ -103,7 +100,7 @@ int	ft_init_envp(t_data *data, char **envp)
 			ft_add_env_node(&data->env, new_env);
 			i++;
 		}
-
+/*
 Case 1️⃣ SHLVL exists and is valid number
 SHLVL=3
 
@@ -141,7 +138,7 @@ key = "SHLVL"
 value = "1"
 
 and add it to env list.
-
+*/
 
 		
 	}
