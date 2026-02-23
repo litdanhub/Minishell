@@ -79,4 +79,6 @@ cmd2->pipe_out = 0;               // last command
 cmd2->next = NULL;
 
 ==============================================
-for printing error msg use ft_print_error(char *msg)
+void ft_init(t_data *data) - initializing variables
+void ft_print_error(char *msg) - for printing error msgs 
+char *ft_env_search_key(t_data *data, char *search) - searches for KEY in env and returns VALUE

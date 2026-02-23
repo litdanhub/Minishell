@@ -11,15 +11,16 @@ CFLAGS = -Wall -Wextra -Werror -g3 -O0 -fsanitize=address,undefined -fno-omit-fr
 PARSER_DIR = parser/
 PARSER_SRC = $(PARSER_DIR)lexer.c
 
-UTILS_DIR = utils/
-UTILS_SRC = $(UTILS_DIR)utils.c \
-	$(UTILS_DIR)free.c
-
 BUILTINS_DIR = builtins/
 BUILTINS_SRC = $(BUILTINS_DIR)env.c \
 	$(BUILTINS_DIR)builtins.c \
 	$(BUILTINS_DIR)no_env.c \
+	$(BUILTINS_DIR)env_utils.c
 
+UTILS_DIR = utils/
+UTILS_SRC = $(UTILS_DIR)utils.c \
+	$(UTILS_DIR)free.c \
+	$(UTILS_DIR)init.c \
 
 #EXEC_DIR = exec/
 #EXEC_SRC = $(EXEC_DIR)

@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/02/19 15:20:11 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 17:11:19 by dsalimov         ###   ########.fr       */
+/*   Created: 2026/02/23 17:10:04 by dsalimov          #+#    #+#             */
+/*   Updated: 2026/02/23 17:34:23 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-void	ft_print_error(char *msg)
+void	ft_init(t_data *data)
 {
-	write(2, "minishell: ", 11);
-	write(2, msg, ft_strlen(msg));
-	write(2, "\n", 1);
+	//add more vars to initialize
+	data->prompt = NULL;
+	data->env = NULL;
+	data->tokens = NULL;
+	data->cmds = NULL;
+	data->last_status = 0;
 }
