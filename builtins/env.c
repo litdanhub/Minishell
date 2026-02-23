@@ -6,13 +6,13 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:58:36 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 13:15:41 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 13:38:43 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-void ft_free_key_value(char *key, char *value)
+void	ft_free_key_value(char *key, char *value)
 {
 	if (key)
 		free(key);
@@ -50,22 +50,43 @@ t_env	*ft_new_env(char *key, char *value)
 	return (new);
 }
 
-int	ft_parse_env(t_data *data, char **envp)
+int	ft_parse_env(char *envp, char **key, char **value)
 {
-	
+	char	*tmp;
+	int		eql_char;
+
+	*key = NULL;
+	*value = NULL;
+	eql_char = 0;
+	tmp = ft_strchr(envp, '=');
+	if (!tmp) // no "="
+	{
+		*key = ft_strdup(envp); // key = the whole line
+		if (!*key)
+			return (perror("minishell: malloc"), 1);
+	}
+	else
+	{
+		eql_char = tmp - envp;
+		*key = ft_substr(envp, 0, eql_char);
+		*value = ft_substr(envp, eql_char + 1, ft_strlen(envp) - eql_char - 1);
+		if (!*key || !*value)
+		{
+			ft_free_key_value(*key, *value);
+			return (perror("minishell: malloc"), 1);
+		}
+	}
+	return (0);
 }
 
 int	ft_init_envp(t_data *data, char **envp, char *argv)
 {
 	int		i;
-	int		equal_char;
 	char	*value;
-	char	*tmp;
 	char	*key;
 	t_env	*new_env;
-		
+
 	i = 0;
-	equal_char = 0;
 	if (!envp || !envp[0]) //if env -i ./minishell, add PWD, SHLVL and _
 	{
 		if (ft_no_env(data, argv))
@@ -75,36 +96,18 @@ int	ft_init_envp(t_data *data, char **envp, char *argv)
 	{
 		while (envp[i])
 		{
-			key = NULL;
-			value = NULL;
-			tmp = ft_strchr(envp[i], '=');
-			if (!tmp) //no "="
-			{
-				key = ft_strdup(envp[i]); //key = the whole line
-				if (!key)
-					return (perror("minishell: malloc"), 1);
-				value = NULL; //value = NULL
-			}
-			else
-			{
-				equal_char = tmp - envp[i];
-				key = ft_substr(envp[i], 0, equal_char);
-				value = ft_substr(envp[i], equal_char + 1, ft_strlen(envp[i]) - equal_char - 1);
-				if (!key || !value)
-				{
-					ft_free_key_value(key, value);
-					return (perror("minishell: malloc"), 1);
-				}
-			}
+			if (ft_parse_env(envp[i], &key, &value))
+				return (1);
 			new_env = ft_new_env(key, value);
 			if (!new_env)
-			{ 
-				ft_free_key_value(key, value);
-				return (1);
-			}
+				return (ft_free_key_value(key, value), 1);
 			ft_add_env_node(&data->env, new_env);
 			i++;
 		}
+	}
+	return (0);
+}
+
 /*
 Case 1️⃣ SHLVL exists and is valid number
 SHLVL=3
@@ -143,9 +146,4 @@ key = "SHLVL"
 value = "1"
 
 and add it to env list.
-*/
-
-		
-	}
-	return (0);
-}
+*/		
