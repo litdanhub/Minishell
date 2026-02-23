@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:58:36 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 18:01:08 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 19:45:34 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,75 +49,28 @@ int	ft_parse_env(char *envp, char **key, char **value)
 	return (0);
 }
 
-
-/*
-Case 1️⃣ SHLVL exists and is valid number
-SHLVL=3
-
-→ convert to int
-→ increment by 1
-→ update node value to "4"
-
-Case 2️⃣ SHLVL exists but invalid
-
-Examples:
-
-SHLVL=abc
-SHLVL=
-SHLVL=-5
-
-Bash behavior:
-
-If non-numeric → reset to 1
-
-If negative → reset to 1
-
-If extremely large → bash resets (but you don’t need to fully replicate overflow behavior for mandatory)
-
-So for Minishell:
-
-👉 If invalid or negative → set to "1"
-
-Case 3️⃣ SHLVL does NOT exist
-
-Then you should:
-
-👉 create new node:
-
-key = "SHLVL"
-value = "1"
-
-and add it to env list.
-*/		
-
 int	ft_update_env_shlvl(t_data *data)
 {
-	char	*value;
+	t_env	*node;
 	char	*new_shlvl;
 	
-		
-	value = ft_env_search_key(data, "SHLVL");
-	if (value) //have SHLVL need to update it
+	node = ft_env_search_key(data, "SHLVL");
+	if (node) //node has SHLVL, need to increament it
 	{
-		printf("Old value %s\n", value); //delete
-		new_shlvl = ft_itoa(ft_atoi(value) + 1); //malloc
+		if (ft_atoi(node->value) <= 0) //if shlvl negative, 0 or character
+			new_shlvl = ft_strdup("1");
+		else
+			new_shlvl = ft_itoa(ft_atoi(node->value) + 1);
 		if (!new_shlvl)
 			return (1);
-free(old_value)
-
-node->value = ft_strdup(new_value)
-		
+		free(node->value);
+		node->value = new_shlvl;
 	}
 	else //no SHLVL, add a new node
 	{
-		printf("NO old value\n"); //delete
 		if (ft_add_env_shlvl(data))
 			return (1);
 	}
-
-
-	value = ft_env_search_key(data, "SHLVL");
-	printf("New value %s\n", value);
 	return (0);
 }
 
@@ -149,7 +102,6 @@ int	ft_init_envp(t_data *data, char **envp, char *argv)
 		}
 		if (ft_update_env_shlvl(data)) //increament SHLVL +1, if missing or invalid then 1
 			return (1);
-
 	}
 	return (0);
 }

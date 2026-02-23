@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/02 10:34:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2025/05/19 11:55:27 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 19:40:54 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	ft_atoi(const char *nptr)
 	int	num;
 	int	sign;
 
+	if (!nptr)
+		return (0);
 	i = 0;
 	num = 0;
 	sign = 1;

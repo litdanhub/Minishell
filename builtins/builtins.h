@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:22:25 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 17:36:15 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 18:47:58 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int		ft_add_env_unders_rel(t_data *data, char *argv, char *key, char *tmp);
 int		ft_no_env(t_data *data, char *argv);
 
 //env_utils.c
-char	*ft_env_search_key(t_data *data, char *search); //searches for KEY in env and returns VALUE
+t_env	*ft_env_search_key(t_data *data, char *search); //searches for KEY in env and returns *node
 void	ft_add_env_node(t_env **env, t_env *new_node);
 t_env	*ft_new_env(char *key, char *value);
 

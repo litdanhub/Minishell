@@ -81,4 +81,5 @@ cmd2->next = NULL;
 ==============================================
 void ft_init(t_data *data) - initializing variables
 void ft_print_error(char *msg) - for printing error msgs 
-char *ft_env_search_key(t_data *data, char *search) - searches for KEY in env and returns VALUE
+t_env *ft_env_search_key(t_data *data, char *search); //searches for KEY in env and returns *node
+

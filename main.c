@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 17:49:03 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 19:51:05 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ void	ft_cleanup(t_data *data)
 	ft_free_tokens(data);
 	ft_free_prompt(data);
 }
-
-
 
 
 int	main(int argc, char **argv, char **envp)

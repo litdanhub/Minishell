@@ -6,23 +6,24 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 16:41:16 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 17:01:45 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 19:47:08 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "builtins.h"
 
-char	*ft_env_search_key(t_data *data, char *search) //searches for KEY in env and returns VALUE
+t_env	*ft_env_search_key(t_data *data, char *search) //searches for KEY in env and returns *node
 {
-	t_env	*tmp;
+	t_env	*node;
 
-	tmp = data->env;
-	while (tmp)
+	node = data->env;
+	while (node)
 	{
-		if (tmp->key && search && ft_strncmp(tmp->key, search,
-				ft_strlen(search)) == 0)
-			return (tmp->value);
-		tmp = tmp->next;
+		if (node->key && search &&
+			ft_strncmp(node->key, search, ft_strlen(search)) == 0 &&
+			ft_strlen(search) == ft_strlen(node->key))
+			return (node);
+		node = node->next;
 	}
 	return (NULL);
 }
@@ -55,10 +56,4 @@ t_env	*ft_new_env(char *key, char *value)
 	new->value = value;
 	new->next = NULL;
 	return (new);
-}
-
-int	ft_env_update_value()
-{
-
-	return (0);
 }
