@@ -77,3 +77,6 @@ cmd2->infile = STDIN_FILENO;      // 0
 cmd2->outfile = STDOUT_FILENO;    // 1
 cmd2->pipe_out = 0;               // last command
 cmd2->next = NULL;
+
+==============================================
+for printing error msg use ft_print_error(char *msg)

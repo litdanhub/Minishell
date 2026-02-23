@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:58:36 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/22 22:49:57 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 13:15:41 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ t_env	*ft_new_env(char *key, char *value)
 	new->value = value;
 	new->next = NULL;
 	return (new);
+}
+
+int	ft_parse_env(t_data *data, char **envp)
+{
+	
 }
 
 int	ft_init_envp(t_data *data, char **envp, char *argv)

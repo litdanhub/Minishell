@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/22 22:48:55 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 12:11:45 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,12 @@
 #include "builtins/builtins.h"
 #include "utils/utils.h"
 
-//for printing error msg use ft_print_error(char *msg)
+void	ft_cleanup(t_data *data)
+{
+	ft_free_env(data);
+	ft_free_tokens(data);
+	ft_free_prompt(data);
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -35,23 +40,21 @@ int	main(int argc, char **argv, char **envp)
 	{
 		data.prompt = readline("minishell$ ");
 		if (!data.prompt) //ctrl+D
+		{	
+			ft_cleanup(&data);
 			break ;
+		}
 		if (*data.prompt) //don't store empty commands
 			add_history(data.prompt);
 		if (ft_proccess_prompt(&data))
 		{
-			ft_free_env(&data);
-			ft_free_tokens(&data);
-			ft_free_prompt(&data);
-
+			ft_cleanup(&data);
 			data.last_status = 1;
 			return (data.last_status);
 		}
-		ft_free_env(&data);
-		ft_free_tokens(&data);
-		ft_free_prompt(&data);
+		ft_cleanup(&data);
 	}
-	clear_history(); //for MacOS
-	//rl_clear_history(); //for Linux
+	//clear_history(); //for MacOS
+	rl_clear_history(); //for Linux
 	return (data.last_status);
 }

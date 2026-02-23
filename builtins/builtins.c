@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/21 13:25:58 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/22 19:20:04 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 13:02:43 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,15 +33,14 @@ char	*ft_pwd(void)
 
 void	ft_env(t_data *data)
 {
-	t_env *tmp;
+	t_env	*tmp;
 
-
-   if (!data || !data->env)
-       return ;
-   tmp = data->env;
-   while (tmp)
-   {
-       printf("%s=%s\n", tmp->key, tmp->value);
-       tmp = tmp->next;
-   }
+	if (!data || !data->env)
+		return ;
+	tmp = data->env;
+	while (tmp)
+	{
+		printf("%s=%s\n", tmp->key, tmp->value);
+		tmp = tmp->next;
+	}
 }
