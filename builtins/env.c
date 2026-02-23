@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:58:36 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 19:45:34 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/23 21:28:45 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,15 +82,12 @@ int	ft_init_envp(t_data *data, char **envp, char *argv)
 	char	*key;
 	t_env	*new_env;
 
-	i = 0;
+	i = -1;
 	if (!envp || !envp[0]) //if env -i ./minishell, add PWD, SHLVL and _
-	{
-		if (ft_no_env(data, argv))
-			return (1);
-	}
+		return (ft_no_env(data, argv));
 	else
 	{
-		while (envp[i])
+		while (envp[++i])
 		{
 			if (ft_parse_env(envp[i], &key, &value))
 				return (1);
@@ -98,7 +95,6 @@ int	ft_init_envp(t_data *data, char **envp, char *argv)
 			if (!new_env)
 				return (ft_free_key_value(key, value), 1);
 			ft_add_env_node(&data->env, new_env);
-			i++;
 		}
 		if (ft_update_env_shlvl(data)) //increament SHLVL +1, if missing or invalid then 1
 			return (1);
