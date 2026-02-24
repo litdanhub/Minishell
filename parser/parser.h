@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:19:39 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/22 19:18:11 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/24 11:41:13 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ int		ft_token_redir_in(t_data *data, char **cursor);
 int		ft_token_redir_out(t_data *data, char **cursor);
 int		ft_token_pipe(t_data *data, char **cursor);
 int		ft_lexing(t_data *data);
-int		ft_proccess_prompt(t_data *data);
+
+//parser.c
+int		ft_parsing(t_data *data);
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 21:30:35 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/24 12:38:27 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,30 @@ void	ft_cleanup(t_data *data)
 }
 
 
+int	ft_proccess_prompt(t_data *data)
+{
+	if (ft_lexing(data))
+	{
+		return (1);
+	}
+	ft_print_tokens(data); //delete
+
+	if (ft_parsing(data))
+	{
+		return (1);
+	}
+	
+	return (0);
+}
+
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
-	
+		
 	if (argc != 1)
 		return (ft_print_error("no arguments allowed"), 1);
-	ft_init(&data);
+	ft_init_data(&data);
 	if (ft_init_envp(&data, envp, argv[0]))
 	{
 		ft_free_env(&data);
@@ -52,7 +69,8 @@ int	main(int argc, char **argv, char **envp)
 			data.last_status = 1;
 			return (data.last_status);
 		}
-		ft_cleanup(&data);
+		ft_free_tokens(&data);
+		ft_free_prompt(&data);
 	}
 	//clear_history(); //for MacOS
 	rl_clear_history(); //for Linux

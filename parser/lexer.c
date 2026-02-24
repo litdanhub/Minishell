@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/22 19:20:39 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/24 11:38:48 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,15 +219,5 @@ int	ft_lexing(t_data *data)
 				return (1);
 		}
 	}
-	return (0);
-}
-
-int	ft_proccess_prompt(t_data *data)
-{
-	if (ft_lexing(data))
-	{
-		return (1);
-	}
-	ft_print_tokens(data); //delete
 	return (0);
 }

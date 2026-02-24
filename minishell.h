@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/22 19:17:59 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/24 12:59:18 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ typedef struct s_redir
 {
 	t_token_type	type;// IN / OUT / APPEND / HEREDOC
 	char			*target;// filename or delimiter
-	int				fd;// opened fd (if needed)
 	struct s_redir	*next;
 }	t_redir;
 
@@ -57,9 +56,8 @@ typedef struct s_cmd //for execve(path, argv, t_env->envp )
 	char			**argv;// has to be malloced and NULL terminated
 	char			*path;// full executable path (if not builtin)
 	t_redir			*redirs;// linked list of redirections
-	int				infile;// default STDIN_FILENO
-	int				outfile;// default STDOUT_FILENO
-	int				pipe_flag; //1 pipe, 0 no pipe for this cmd
+	int				infile;// 0, change during open()
+	int				outfile;// 1, change during open()
 	struct s_cmd	*next;// next command in pipeline
 }	t_cmd;
 

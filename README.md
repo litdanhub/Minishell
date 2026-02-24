@@ -57,25 +57,23 @@ WORD(out.txt)
 
 Parser
 cmd1->argv = ["echo", "hello", NULL];
-cmd1->path = NULL;                // builtin
+cmd1->path = NULL;                // builtin, but resolved during execution
 cmd1->redirs = NULL;              // no redirections
-cmd1->infile = STDIN_FILENO;      // 0
-cmd1->outfile = STDOUT_FILENO;    // 1
-cmd1->pipe_out = 1;               // because of |
+cmd1->infile = STDIN_FILENO;      // 0, change during open()
+cmd1->outfile = STDOUT_FILENO;    // 1, change during open()
 cmd1->next = cmd2;
+
 
 t_redir *r1;
 r1->type = T_REDIR_OUT; //>
 r1->target = "out.txt";
-r1->fd = -1;          // not opened yet
 r1->next = NULL;
 
 cmd2->argv = ["grep", "h", NULL];
 cmd2->path = NULL;                // resolved during execution
 cmd2->redirs = r1;
-cmd2->infile = STDIN_FILENO;      // 0
-cmd2->outfile = STDOUT_FILENO;    // 1
-cmd2->pipe_out = 0;               // last command
+cmd2->infile = STDIN_FILENO;      // 0, change during open()
+cmd2->outfile = STDOUT_FILENO;    // 1, change during open()
 cmd2->next = NULL;
 
 ==============================================
