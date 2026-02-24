@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/24 12:38:27 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/24 15:00:16 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,16 +27,13 @@ void	ft_cleanup(t_data *data)
 int	ft_proccess_prompt(t_data *data)
 {
 	if (ft_lexing(data))
-	{
 		return (1);
-	}
+	printf("=======LEXING=========\n");
 	ft_print_tokens(data); //delete
-
+	printf("=======PARSING=========\n");
+		
 	if (ft_parsing(data))
-	{
 		return (1);
-	}
-	
 	return (0);
 }
 
@@ -58,18 +55,18 @@ int	main(int argc, char **argv, char **envp)
 		data.prompt = readline("minishell$ ");
 		if (!data.prompt) //ctrl+D
 		{	
-			ft_cleanup(&data);
+			ft_cleanup(&data); //add free cmd
 			break ;
 		}
 		if (*data.prompt) //don't store empty commands
 			add_history(data.prompt);
 		if (ft_proccess_prompt(&data))
 		{
-			ft_cleanup(&data);
+			ft_cleanup(&data); //now i free everything in case of return 1 (malloc error)
 			data.last_status = 1;
 			return (data.last_status);
 		}
-		ft_free_tokens(&data);
+		ft_free_tokens(&data); //add free cmd
 		ft_free_prompt(&data);
 	}
 	//clear_history(); //for MacOS

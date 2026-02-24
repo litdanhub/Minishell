@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/24 11:38:48 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/24 14:57:51 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_print_tokens(t_data *data) //delete after use
 	tmp = data->tokens;
 	while (tmp)
 	{
-		printf("type %d value %s\n", tmp->type, tmp->value);
+		printf("type %d value %s quotes %d\n", tmp->type, tmp->value, tmp->quote);
 		tmp = tmp->next;
 	}
 }
@@ -42,7 +42,7 @@ int	ft_isspace(char c)
 	return (0);
 }
 
-void	ft_add_node(t_token **tokens, t_token *new_node)
+void	ft_add_token_node(t_token **tokens, t_token *new_node)
 {
 	t_token	*temp;
 
@@ -91,7 +91,7 @@ int	ft_token_word(t_data *data, char **cursor)
 		free(word);
 		return (1);
 	}
-	ft_add_node(&data->tokens, new_token);
+	ft_add_token_node(&data->tokens, new_token);
 	*cursor += i;
 	return (0);
 }
@@ -108,7 +108,7 @@ static int	ft_token_redir_help(t_data *data, char *word, t_token_type type)
 		free(word);
 		return (1);
 	}
-	ft_add_node(&data->tokens, new_token);
+	ft_add_token_node(&data->tokens, new_token);
 	return (0);
 }
 
@@ -181,7 +181,7 @@ int	ft_token_pipe(t_data *data, char **cursor)
 		free(word);
 		return (1);
 	}
-	ft_add_node(&data->tokens, new_token);
+	ft_add_token_node(&data->tokens, new_token);
 	*cursor += i;
 	return (0);
 }
