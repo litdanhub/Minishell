@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/24 11:39:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/25 17:37:23 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/25 21:44:40 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,11 @@ int	ft_parsing(t_data *data)
 		argv = malloc (sizeof(char *) * (i + 1)); //allocate *argv for i words
 		if (!argv) //how to free previously allocted argvs???
 			return (1);
+		while (i >= 0) //initializing argv[i] with NULL
+		{
+			argv[i] = NULL;
+			i--;
+		}
 		new_cmd = ft_new_cmd(argv);
 		if (!new_cmd)
 			return (free(argv), 1);
@@ -102,7 +107,7 @@ int	ft_parsing(t_data *data)
 		while (token && token->type != T_PIPE)
 		{	
 			if (token->type == T_WORD) //add skipping redir here
-			{	
+			{
 				cmd->argv[i] = ft_strdup(token->value);
 				if (!cmd->argv[i])
 					return (1);
