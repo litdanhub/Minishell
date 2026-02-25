@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:17:43 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/24 12:38:22 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/25 15:21:35 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ void	ft_print_error(char *msg); //printig error msgs
 void	ft_free_tokens(t_data *data);
 void	ft_free_prompt(t_data *data);
 void	ft_free_env(t_data *data);
+void	ft_free_cmds(t_data *data);
 
 //init.c
 void	ft_init_data(t_data *data); //initializing variables

@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:52:23 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/20 16:57:52 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/25 16:40:34 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	ft_free_tokens(t_data *data)
 	t_token	*current;
 	t_token	*next_node;
 
-	if (!data)
+	if (!data || !data->tokens)
 		return ;
 	current = data->tokens;
 	while (current)
@@ -45,18 +45,44 @@ void	ft_free_env(t_data *data)
 	t_env	*current;
 	t_env	*next_node;
 
-	if (!data)
+	if (!data || !data->env)
 		return ;
 	current = data->env;
 	while (current)
 	{
 		next_node = current->next;
 		if (current->key)
-			free(current->key);
+			free(current->key); //free malloced key
 		if (current->value)
-			free(current->value);
+			free(current->value); //free malloced value
 		free(current); //free the struct node itself
 		current = next_node; //go to next node
 	}
 	data->env = NULL;	
+}
+
+void	ft_free_cmds(t_data *data)
+{
+	t_cmd	*current;
+	t_cmd	*next_node;
+	int		i;
+
+	if (!data || !data->cmds)
+		return ;
+	current = data->cmds;
+	while (current)
+	{
+		next_node = current->next;
+		i = 0;
+		while (current->argv && current->argv[i])
+		{
+			if (current->argv[i])
+				free(current->argv[i]); //free value allocation
+			i++;
+		}
+		free(current->argv); //free *argv
+		free(current); //free the struct node itself
+		current = next_node; //go to next node
+	}
+	data->cmds = NULL;
 }

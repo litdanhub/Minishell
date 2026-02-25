@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/24 11:39:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/25 13:26:07 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/25 17:37:23 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ void	ft_print_cmd(t_data *data) //delete after use
 		}
 		printf("\"%s\"", cmd->argv[i]); //for null
 		printf("\n");
-		
 		cmd = cmd->next;
 	}
 }
@@ -70,6 +69,7 @@ int	ft_parsing(t_data *data)
 {
 	t_token	*token;
 	t_cmd	*new_cmd;
+	t_cmd	*cmd; //use new_cmd for that???
 	char	**argv;
 	int		i;
 	
@@ -84,18 +84,37 @@ int	ft_parsing(t_data *data)
 				i++;
 			token = token->next;
 		}
-		argv = malloc (sizeof(char *) * (i + 1)); //protect
+		argv = malloc (sizeof(char *) * (i + 1)); //allocate *argv for i words
+		if (!argv) //how to free previously allocted argvs???
+			return (1);
 		new_cmd = ft_new_cmd(argv);
 		if (!new_cmd)
 			return (free(argv), 1);
 		ft_add_cmd_node(&data->cmds, new_cmd);
-		printf("%d\n", i); //delete
 		if (token && token->type == T_PIPE)
 			token = token->next; //since we are at PIPE, go the next token
 	}
-
-	HERE
-
-	
+	token = data->tokens;
+	cmd = data->cmds;
+	while (token) //allocate each WORD in argv[i]
+	{
+		i = 0;
+		while (token && token->type != T_PIPE)
+		{	
+			if (token->type == T_WORD) //add skipping redir here
+			{	
+				cmd->argv[i] = ft_strdup(token->value);
+				if (!cmd->argv[i])
+					return (1);
+				i++;
+			}
+			token = token->next;
+		}
+		cmd->argv[i] = NULL;
+		if (token && token->type == T_PIPE)
+			token = token->next; //since we are at PIPE, go the next token	
+		cmd = cmd->next;
+	}
+	//ft_print_cmd(data); //delete
 	return (0);
 }

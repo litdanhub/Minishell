@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/24 14:57:51 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/25 15:16:08 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	ft_print_tokens(t_data *data) //delete after use
 	tmp = data->tokens;
 	while (tmp)
 	{
-		printf("type %d value %s quotes %d\n", tmp->type, tmp->value, tmp->quote);
+		printf("type %d value %s            quotes %d\n", tmp->type, tmp->value, tmp->quote);
 		tmp = tmp->next;
 	}
 }
