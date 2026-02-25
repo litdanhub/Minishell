@@ -44,6 +44,7 @@ This person receives:
 t_cmd *cmd
 
 ------------------------------
+```text
 echo "hello" | grep h > out.txt
 
 Lexer
