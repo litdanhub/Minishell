@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:58:36 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 21:28:45 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/25 11:50:12 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ int	ft_update_env_shlvl(t_data *data)
 	}
 	return (0);
 }
-
 
 int	ft_init_envp(t_data *data, char **envp, char *argv)
 {

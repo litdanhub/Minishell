@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/24 15:00:16 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/25 12:28:21 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,23 @@ void	ft_cleanup(t_data *data)
 	ft_free_prompt(data);
 }
 
+void	ft_print_env(t_data *data) //delete after use
+{
+	t_env	*env;
+
+	env = data->env;
+	while (env)
+	{
+		printf("%s = %s\n", env->key, env->value);
+		env = env->next;
+	}
+}
 
 int	ft_proccess_prompt(t_data *data)
 {
 	if (ft_lexing(data))
 		return (1);
-	printf("=======LEXING=========\n");
+	printf("=======LEXING=========\n"); //delete
 	ft_print_tokens(data); //delete
 	printf("=======PARSING=========\n");
 		
@@ -50,6 +61,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_free_env(&data);
 		return(1);
 	}
+	ft_print_env(&data); //delete
 	while (1)
 	{
 		data.prompt = readline("minishell$ ");

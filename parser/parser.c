@@ -6,17 +6,38 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/24 11:39:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/24 17:26:11 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/25 13:26:07 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
+void	ft_print_cmd(t_data *data) //delete after use
+{
+	t_cmd	*cmd;
+	int		i;
+
+	cmd = data->cmds;
+	while (cmd)
+	{
+		i = 0;
+		while (cmd->argv[i])
+		{
+			printf("\"%s\", ", cmd->argv[i]);
+			i++;
+		}
+		printf("\"%s\"", cmd->argv[i]); //for null
+		printf("\n");
+		
+		cmd = cmd->next;
+	}
+}
+
 void	ft_add_cmd_node(t_cmd **cmd, t_cmd *new_node)
 {
 	t_cmd	*temp;
 
-	if (!new_node) //dont need as i check !new_token after I malloced it //but maybe if other functions dont check for NULL before passing?
+	if (!new_node) //dont need as i check !new_cmd after I malloced it //but maybe if other functions dont check for NULL before passing?
 		return ;
 	if (!*cmd) // If no cmds yet
 	{
@@ -51,38 +72,30 @@ int	ft_parsing(t_data *data)
 	t_cmd	*new_cmd;
 	char	**argv;
 	int		i;
-	int		j;
-
+	
 	token = data->tokens;
-	while (token)
+	while (token) //count PIPES and allocate mem for argv[i]
 	{
 		i = 0;
 		argv = NULL;
 		while (token && token->type != T_PIPE)
 		{	
-			if (token->type == T_WORD)
+			if (token->type == T_WORD) //add skipping redir here
 				i++;
 			token = token->next;
 		}
 		argv = malloc (sizeof(char *) * (i + 1)); //protect
-
+		new_cmd = ft_new_cmd(argv);
+		if (!new_cmd)
+			return (free(argv), 1);
+		ft_add_cmd_node(&data->cmds, new_cmd);
+		printf("%d\n", i); //delete
 		if (token && token->type == T_PIPE)
-		{
-			new_cmd = ft_new_cmd(argv);
-			if (!new_cmd)
-			{
-				free(argv);
-				return (1);
-			}
-			ft_add_cmd_node(&data->cmds, new_cmd);
-			
-			printf("%d\n", i);
-			token = token->next;
-		}
+			token = token->next; //since we are at PIPE, go the next token
 	}
-	printf("%d\n", i);
 
-	
+	HERE
+
 	
 	return (0);
 }
