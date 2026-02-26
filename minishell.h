@@ -6,14 +6,13 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/24 12:59:18 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/26 12:03:10 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-//check lib before adding
 # include "./libft/libft.h" //stdlib.h <stdint.h> <unistd.h>
 # include <stdio.h> //readline, printf
 # include <readline/readline.h>
@@ -43,7 +42,6 @@ typedef enum e_quote_type
 	Q_DOUBLE
 }	t_quote_type;
 
-//initialize new VARS in ft_init
 typedef struct s_redir
 {
 	t_token_type	type;// IN / OUT / APPEND / HEREDOC

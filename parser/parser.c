@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/24 11:39:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/25 21:44:40 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/26 12:34:10 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	ft_parsing(t_data *data)
 {
 	t_token	*token;
 	t_cmd	*new_cmd;
-	t_cmd	*cmd; //use new_cmd for that???
+	t_cmd	*cmd;
 	char	**argv;
 	int		i;
 	
@@ -80,12 +80,16 @@ int	ft_parsing(t_data *data)
 		argv = NULL;
 		while (token && token->type != T_PIPE)
 		{	
+			if (token->type == T_REDIR_IN || token->type == T_REDIR_OUT
+				|| token->type == T_REDIR_APPEND || token->type == T_HEREDOC)
+					i--; //decrement the following WORD (file), it will be in t_redir
 			if (token->type == T_WORD) //add skipping redir here
 				i++;
 			token = token->next;
 		}
+		printf("%d\n", i); //delete
 		argv = malloc (sizeof(char *) * (i + 1)); //allocate *argv for i words
-		if (!argv) //how to free previously allocted argvs???
+		if (!argv)
 			return (1);
 		while (i >= 0) //initializing argv[i] with NULL
 		{
@@ -106,7 +110,12 @@ int	ft_parsing(t_data *data)
 		i = 0;
 		while (token && token->type != T_PIPE)
 		{	
-			if (token->type == T_WORD) //add skipping redir here
+			if (token->type == T_REDIR_IN || token->type == T_REDIR_OUT
+				|| token->type == T_REDIR_APPEND || token->type == T_HEREDOC)
+			{
+				token = token->next;		
+			}
+			else if (token->type == T_WORD)
 			{
 				cmd->argv[i] = ft_strdup(token->value);
 				if (!cmd->argv[i])
@@ -120,6 +129,6 @@ int	ft_parsing(t_data *data)
 			token = token->next; //since we are at PIPE, go the next token	
 		cmd = cmd->next;
 	}
-	//ft_print_cmd(data); //delete
+	ft_print_cmd(data); //delete
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/25 17:32:32 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/26 11:45:58 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ int	ft_proccess_prompt(t_data *data)
 {
 	if (ft_lexing(data))
 		return (1);
-	//printf("=======LEXING=========\n"); //delete
-	//ft_print_tokens(data);
-	//printf("=======PARSING=========\n");
+	printf("=======LEXING=========\n"); //delete
+	ft_print_tokens(data);
+	printf("=======PARSING=========\n");
 		
 	if (ft_parsing(data))
 		return (1);
@@ -62,29 +62,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_free_env(&data);
 		return(1);
 	}
-	//ft_print_env(&data); //delete
-	///////////////////test for funcheck///////////////////
-	int		i = 0;
-	while (i < 30)
-	{
-		data.prompt = ft_strdup("echo Hello world | grep H | wc -l");
-		if (!data.prompt)
-		{
-			ft_free_env(&data);
-			return(1);
-		}
-		
-		if (ft_proccess_prompt(&data))
-		{
-			ft_cleanup(&data); //now i free everything in case of return 1 (malloc error)
-			data.last_status = 1;
-			return (data.last_status);
-		}
-		ft_cleanup(&data);
-		i++;
-	}
-	////////////////////////////////////////////////////////
-	/*
+	ft_print_env(&data); //delete
+	
 	while (1)
 	{
 		data.prompt = readline("minishell$ ");
@@ -107,6 +86,30 @@ int	main(int argc, char **argv, char **envp)
 	}
 	//clear_history(); //for MacOS
 	rl_clear_history(); //for Linux
-	*/
+
 	return (data.last_status);
 }
+
+/*
+/////////test for funcheck(instead of while loop)/////////////
+	int		i = 0;
+	while (i < 30)
+	{
+		data.prompt = ft_strdup("echo Hello world | grep H | wc -l");
+		if (!data.prompt)
+		{
+			ft_free_env(&data);
+			return(1);
+		}
+		
+		if (ft_proccess_prompt(&data))
+		{
+			ft_cleanup(&data); //now i free everything in case of return 1 (malloc error)
+			data.last_status = 1;
+			return (data.last_status);
+		}
+		ft_cleanup(&data);
+		i++;
+	}
+	////////////////////////////////////////////////////////
+*/
