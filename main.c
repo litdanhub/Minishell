@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/26 11:45:58 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/26 18:12:53 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 
 void	ft_cleanup(t_data *data)
 {
-	ft_free_env(data);
+	ft_free_cmds(data);
 	ft_free_tokens(data);
 	ft_free_prompt(data);
-	ft_free_cmds(data);
+	ft_free_env(data);
+
 }
 
 void	ft_print_env(t_data *data) //delete after use
