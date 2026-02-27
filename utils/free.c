@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:52:23 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/26 18:12:01 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/27 16:43:29 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,22 @@ void	ft_free_prompt(t_data *data)
 	}
 }
 
+static void	ft_free_redirs(t_cmd *current)
+{
+	t_redir	*next_redir;
+
+	while (current->redirs)
+	{
+		next_redir = current->redirs->next;
+		free(current->redirs);
+		current->redirs = next_redir;
+	}
+}
+
 void	ft_free_cmds(t_data *data)
 {
 	t_cmd	*current;
-	t_cmd	*next_node;
+	t_cmd	*next_cmd;
 	int		i;
 
 	if (!data || !data->cmds)
@@ -72,7 +84,7 @@ void	ft_free_cmds(t_data *data)
 	current = data->cmds;
 	while (current)
 	{
-		next_node = current->next;
+		next_cmd = current->next;
 		i = 0;
 		while (current->argv && current->argv[i])
 		{
@@ -80,12 +92,10 @@ void	ft_free_cmds(t_data *data)
 				free(current->argv[i]); //free value allocation
 			i++;
 		}
-		if (current->redirs) //free redirs, value is freed in ft_free_tokens
-			free(current->redirs);
+		ft_free_redirs(current);
 		free(current->argv); //free *argv
 		free(current); //free the struct node itself
-		current = next_node; //go to next node
+		current = next_cmd; //go to next node
 	}
 	data->cmds = NULL;
 }
-
