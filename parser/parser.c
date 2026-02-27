@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/24 11:39:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/27 17:56:09 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/27 18:37:54 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	ft_print_cmd(t_data *data) //delete after use
 	int		i;
 
 	cmd = data->cmds;
+	printf("---------PARSING---------\n");
 	while (cmd)
 	{
 		i = 0;
@@ -139,6 +140,5 @@ int	ft_parsing(t_data *data) //the rule is always < > << >> and file/EOF
 			token = token->next; //since we are at PIPE, go the next token	
 		cmd = cmd->next;
 	}
-	ft_print_cmd(data); //delete
 	return (0);
 }

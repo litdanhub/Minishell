@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/26 18:12:53 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/27 19:03:41 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,15 @@ int	ft_proccess_prompt(t_data *data)
 {
 	if (ft_lexing(data))
 		return (1);
-	printf("=======LEXING=========\n"); //delete
-	ft_print_tokens(data);
-	printf("=======PARSING=========\n");
-		
+	ft_print_tokens(data); //delete
+
+	if (ft_check_lexing(data)) //checking pipes and redir
+		return (1);
+	
 	if (ft_parsing(data))
 		return (1);
+	ft_print_cmd(data); //delete
+
 	return (0);
 }
 
@@ -64,7 +67,6 @@ int	main(int argc, char **argv, char **envp)
 		return(1);
 	}
 	ft_print_env(&data); //delete
-	
 	while (1)
 	{
 		data.prompt = readline("minishell$ ");
@@ -87,19 +89,18 @@ int	main(int argc, char **argv, char **envp)
 	}
 	//clear_history(); //for MacOS
 	rl_clear_history(); //for Linux
-
 	return (data.last_status);
 }
 
 /*
-/////////test for funcheck(instead of while loop)/////////////
+/////////test for funcheck(instead of readline)/////////////
 	int		i = 0;
 	while (i < 30)
 	{
 		data.prompt = ft_strdup("echo Hello world | grep H | wc -l");
 		if (!data.prompt)
 		{
-			ft_free_env(&data);
+			ft_cleanup(&data);
 			return(1);
 		}
 		
@@ -109,8 +110,11 @@ int	main(int argc, char **argv, char **envp)
 			data.last_status = 1;
 			return (data.last_status);
 		}
-		ft_cleanup(&data);
+		ft_free_cmds(&data);
+		ft_free_tokens(&data);
+		ft_free_prompt(&data);
 		i++;
 	}
-	////////////////////////////////////////////////////////
+	ft_free_env(&data);
+////////////////////////////////////////////////////////
 */

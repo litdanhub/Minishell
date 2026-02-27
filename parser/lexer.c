@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/25 15:16:08 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/02/27 18:37:24 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	ft_print_tokens(t_data *data) //delete after use
 	if (!data || !data->tokens)
 		return ;
 	tmp = data->tokens;
+	printf("---------LEXING---------\n");
 	while (tmp)
 	{
 		printf("type %d value %s            quotes %d\n", tmp->type, tmp->value, tmp->quote);

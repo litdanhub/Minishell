@@ -11,8 +11,8 @@ CFLAGS = -Wall -Wextra -Werror -g #delete g flag
 PARSER_DIR = parser/
 PARSER_SRC = $(PARSER_DIR)lexer.c \
 	$(PARSER_DIR)parser.c \
-	$(PARSER_DIR)parser_utils.c
-
+	$(PARSER_DIR)parser_utils.c \
+	$(PARSER_DIR)checker.c
 
 BUILTINS_DIR = builtins/
 BUILTINS_SRC = $(BUILTINS_DIR)env.c \
