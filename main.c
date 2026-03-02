@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/27 19:03:41 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/02 12:28:42 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,19 @@
 #include "builtins/builtins.h"
 #include "utils/utils.h"
 
-void	ft_cleanup(t_data *data)
+void	ft_cleanup_exit(t_data *data)
 {
 	ft_free_cmds(data);
 	ft_free_tokens(data);
 	ft_free_prompt(data);
 	ft_free_env(data);
+}
 
+void	ft_cleanup_iteration(t_data *data)
+{
+	ft_free_cmds(data);
+	ft_free_tokens(data);
+	ft_free_prompt(data);
 }
 
 void	ft_print_env(t_data *data) //delete after use
@@ -37,14 +43,14 @@ void	ft_print_env(t_data *data) //delete after use
 	}
 }
 
-int	ft_proccess_prompt(t_data *data)
+int	ft_process_prompt(t_data *data)
 {
 	if (ft_lexing(data))
 		return (1);
 	ft_print_tokens(data); //delete
 
-	if (ft_check_lexing(data)) //checking pipes and redir
-		return (1);
+	if (ft_check_lexing(data)) //checking syntax for pipes and redir
+		return (2);
 	
 	if (ft_parsing(data))
 		return (1);
@@ -72,23 +78,23 @@ int	main(int argc, char **argv, char **envp)
 		data.prompt = readline("minishell$ ");
 		if (!data.prompt) //ctrl+D
 		{	
-			ft_cleanup(&data);
+			ft_cleanup_exit(&data);
 			break ;
 		}
 		if (*data.prompt) //don't store empty commands
 			add_history(data.prompt);
-		if (ft_proccess_prompt(&data))
+			
+		data.last_status = ft_process_prompt(&data); //1 malloc err, 2 syntax err
+		
+		if (data.last_status == 1)
 		{
-			ft_cleanup(&data); //now i free everything in case of return 1 (malloc error)
-			data.last_status = 1;
-			return (data.last_status);
+			ft_cleanup_exit(&data);
+			break ;
 		}
-		ft_free_cmds(&data);
-		ft_free_tokens(&data);
-		ft_free_prompt(&data);
+		ft_cleanup_iteration(&data);
 	}
-	//clear_history(); //for MacOS
-	rl_clear_history(); //for Linux
+	clear_history(); //for MacOS
+	//rl_clear_history(); //for Linux
 	return (data.last_status);
 }
 
