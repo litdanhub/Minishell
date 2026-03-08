@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:19:39 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/27 18:40:30 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/08 15:19:48 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,10 @@
 
 //lexer.c
 void	ft_print_tokens(t_data *data);//delete
-int		ft_special_char(char c); //check this function and ft_isspace
+int		ft_special_char(char c);
 int		ft_isspace(char c);
 void	ft_add_token_node(t_token **tokens, t_token *new_node);
-t_token	*ft_new_token(char *value, t_token_type type);
+t_token	*ft_new_token(char *value, t_token_type type, int quotes);
 int		ft_token_word(t_data *data, char **cursor);
 int		ft_token_redir_in(t_data *data, char **cursor);
 int		ft_token_redir_out(t_data *data, char **cursor);

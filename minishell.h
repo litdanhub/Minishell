@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/26 12:03:10 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/08 16:53:55 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
-	t_quote_type	quote;
+	t_quote_type	quote; //do i still need it?
 	struct s_token	*next;
 }	t_token;
 

@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/02 12:28:42 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/04 10:58:03 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ int	ft_process_prompt(t_data *data)
 	return (0);
 }
 
-
 int	main(int argc, char **argv, char **envp)
 {
 	t_data	data;
@@ -72,9 +71,10 @@ int	main(int argc, char **argv, char **envp)
 		ft_free_env(&data);
 		return(1);
 	}
-	ft_print_env(&data); //delete
+	//ft_print_env(&data); //delete
 	while (1)
 	{
+		printf("\n"); //delete
 		data.prompt = readline("minishell$ ");
 		if (!data.prompt) //ctrl+D
 		{	

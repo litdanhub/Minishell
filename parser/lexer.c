@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/27 18:37:24 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/08 18:46:24 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,6 @@ void	ft_print_tokens(t_data *data) //delete after use
 	}
 }
 
-int	ft_special_char(char c) //maybe add quotes here?
-{
-	if (c == '|' || c == '<' || c == '>')
-		return (1);
-	if (c == ' ' || (c >= '\t' && c <= '\r'))
-		return (1);
-	return (0);
-}
 
 int	ft_isspace(char c)
 {
@@ -60,7 +52,7 @@ void	ft_add_token_node(t_token **tokens, t_token *new_node)
 	temp->next = new_node; //each new_node has already NULL in theirs ->next, so no need to add NULL
 }
 
-t_token	*ft_new_token(char *value, t_token_type type)
+t_token	*ft_new_token(char *value, t_token_type type, int quotes)
 {
 	t_token	*new;
 
@@ -69,32 +61,12 @@ t_token	*ft_new_token(char *value, t_token_type type)
 		return (perror("minishell: malloc"), NULL);
 	new->value = value;
 	new->type = type;
-	new->quote = Q_NONE; //Default value
+	if (quotes)
+		new->quote = quotes;
+	else
+		new->quote = Q_NONE;
 	new->next = NULL;
 	return (new);
-}
-
-int	ft_token_word(t_data *data, char **cursor)
-{
-	int		i;
-	char	*word;
-	t_token	*new_token;
-
-	i = 0;
-	while ((*cursor)[i] && !ft_special_char((*cursor)[i])) //starting, then ending the word with a special char
-		i++; //the length of the word
-	word = ft_substr(*cursor, 0, i);
-	if (!word)
-		return (perror("minishell: malloc"), 1);
-	new_token = ft_new_token(word, T_WORD);
-	if (!new_token)
-	{
-		free(word);
-		return (1);
-	}
-	ft_add_token_node(&data->tokens, new_token);
-	*cursor += i;
-	return (0);
 }
 
 static int	ft_token_redir_help(t_data *data, char *word, t_token_type type)
@@ -103,7 +75,7 @@ static int	ft_token_redir_help(t_data *data, char *word, t_token_type type)
 
 	if (!word)
 		return (perror("minishell: malloc"), 1);
-	new_token = ft_new_token(word, type);
+	new_token = ft_new_token(word, type, 0);
 	if (!new_token)
 	{
 		free(word);
@@ -176,7 +148,7 @@ int	ft_token_pipe(t_data *data, char **cursor)
 	if (!word)
 		return (perror("minishell: malloc"), 1);
 	i++;
-	new_token = ft_new_token(word, T_PIPE);
+	new_token = ft_new_token(word, T_PIPE, 0);
 	if (!new_token)
 	{
 		free(word);
@@ -186,6 +158,64 @@ int	ft_token_pipe(t_data *data, char **cursor)
 	*cursor += i;
 	return (0);
 }
+
+
+int	ft_special_char(char c)
+{
+	if (c == '|' || c == '<' || c == '>' || c == ' ' || (c >= '\t' && c <= '\r'))
+		return (1);
+	return (0);
+}
+
+int	ft_quotes(char c, int *quotes)
+{
+	if (c == '\'' && *quotes == Q_NONE)
+	{	
+		*quotes = Q_SINGLE;	
+		return (1);
+	}
+	else if (c == '"' && *quotes == Q_NONE)
+	{	
+		*quotes = Q_DOUBLE;	
+		return (1);
+	}
+	else if ((c == '\'' && *quotes == Q_SINGLE) || (c == '"' && *quotes == Q_DOUBLE))
+	{	
+		*quotes = Q_NONE;	
+		//return (1);
+	}
+	return (0);
+}
+
+int	ft_token_word(t_data *data, char **cursor)
+{
+	int		i;
+	char	*word;
+	t_token	*new_token;
+	int		quotes;
+
+	i = 0;
+	quotes = Q_NONE;
+	while ((*cursor)[i])
+	{
+		ft_quotes((*cursor)[i], &quotes);
+		if (ft_special_char((*cursor)[i]) && quotes == Q_NONE) //start WORD, END with a special char
+			break ;
+		i++; //the length of the word
+	}
+		
+	word = ft_substr(*cursor, 0, i);
+	if (!word)
+		return (perror("minishell: malloc"), 1);
+	new_token = ft_new_token(word, T_WORD, quotes);
+	if (!new_token)
+		return (free(word), 1);
+	ft_add_token_node(&data->tokens, new_token);
+	
+	*cursor += i;
+	return (0);
+}
+
 
 int	ft_lexing(t_data *data)
 {
@@ -213,7 +243,6 @@ int	ft_lexing(t_data *data)
 			if (ft_token_redir_out(data, &cursor)) //start a redirect OUT or APPEND token
 				return (1);
 		}
-		//add quotes here
 		else
 		{
 			if (ft_token_word(data, &cursor)) //start a word token, sending an address of a right cursor of propmt
