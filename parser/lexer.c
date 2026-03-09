@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/08 18:46:24 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/09 13:34:32 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
+#include "../utils/utils.h"
 
 void	ft_print_tokens(t_data *data) //delete after use
 {
@@ -159,11 +160,48 @@ int	ft_token_pipe(t_data *data, char **cursor)
 	return (0);
 }
 
+static char	*ft_concan(char *str, char c) //concatenating each char
+{
+	char	*new_str;
+	int		i;
+	int		len;
+	
+	new_str = NULL;
+	if (!str)
+	{
+		new_str = malloc (sizeof(char) * (1 + 1));
+		if (!new_str)
+			return (perror("minishell: malloc"), NULL);
+		new_str[0] = c;
+		new_str[1] = '\0';
+		return (new_str);
+	}
+	len = ft_strlen(str);
+	new_str = malloc (sizeof(char) * (len + 1 + 1));
+	if (!new_str)
+		return (perror("minishell: malloc"), NULL);
+	i = -1;
+	while (++i < len)
+		new_str[i] = str[i];
+	new_str[i] = c;
+	new_str[i + 1] = '\0';
+	return (new_str);
+}
 
 int	ft_special_char(char c)
 {
 	if (c == '|' || c == '<' || c == '>' || c == ' ' || (c >= '\t' && c <= '\r'))
 		return (1);
+	return (0);
+}
+
+static int	ft_unsupported_char(char c)
+{
+	if (c == '\\' || c == ';')
+	{
+		ft_print_error("syntax error: unclosed quotes");	
+		return (1);
+	}
 	return (0);
 }
 
@@ -182,7 +220,7 @@ int	ft_quotes(char c, int *quotes)
 	else if ((c == '\'' && *quotes == Q_SINGLE) || (c == '"' && *quotes == Q_DOUBLE))
 	{	
 		*quotes = Q_NONE;	
-		//return (1);
+		return (1);
 	}
 	return (0);
 }
@@ -191,22 +229,35 @@ int	ft_token_word(t_data *data, char **cursor)
 {
 	int		i;
 	char	*word;
+	char	*temp;
 	t_token	*new_token;
 	int		quotes;
 
 	i = 0;
 	quotes = Q_NONE;
+	word = NULL;
+	temp = NULL;
 	while ((*cursor)[i])
 	{
-		ft_quotes((*cursor)[i], &quotes);
-		if (ft_special_char((*cursor)[i]) && quotes == Q_NONE) //start WORD, END with a special char
+		if (ft_quotes((*cursor)[i], &quotes))
+		{	
+			i++;
+			continue ;
+		}
+		if (ft_special_char((*cursor)[i]) && quotes == Q_NONE)
 			break ;
-		i++; //the length of the word
+		if (ft_unsupported_char((*cursor)[i]) && quotes == Q_NONE)
+			break ;
+		temp = ft_concan(word, (*cursor)[i]);
+		if (word)
+			free(word);
+		if (!temp)
+			return (1);
+		word = temp;
+		i++;
 	}
-		
-	word = ft_substr(*cursor, 0, i);
-	if (!word)
-		return (perror("minishell: malloc"), 1);
+	if (quotes == Q_SINGLE || quotes == Q_DOUBLE)
+		printf("ERROR\n");
 	new_token = ft_new_token(word, T_WORD, quotes);
 	if (!new_token)
 		return (free(word), 1);

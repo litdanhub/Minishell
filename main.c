@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/04 10:58:03 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/09 13:15:23 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,24 +103,30 @@ int	main(int argc, char **argv, char **envp)
 	int		i = 0;
 	while (i < 30)
 	{
-		data.prompt = ft_strdup("echo Hello world | grep H | wc -l");
+		data.prompt = ft_strdup("echo \"Hello world\" | 'grep H' | wc -l");
 		if (!data.prompt)
 		{
-			ft_cleanup(&data);
+			ft_cleanup_exit(&data);
 			return(1);
 		}
 		
-		if (ft_proccess_prompt(&data))
+		data.last_status = ft_process_prompt(&data); //1 malloc err, 2 syntax err
+		
+		if (data.last_status == 1)
 		{
-			ft_cleanup(&data); //now i free everything in case of return 1 (malloc error)
-			data.last_status = 1;
-			return (data.last_status);
+			ft_cleanup_exit(&data);
+			break ;
 		}
+		ft_cleanup_iteration(&data);
+		
+
 		ft_free_cmds(&data);
 		ft_free_tokens(&data);
 		ft_free_prompt(&data);
 		i++;
 	}
 	ft_free_env(&data);
+	return (data.last_status);
+}
 ////////////////////////////////////////////////////////
 */
