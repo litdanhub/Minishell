@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/09 13:15:23 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/09 16:42:10 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,15 +45,23 @@ void	ft_print_env(t_data *data) //delete after use
 
 int	ft_process_prompt(t_data *data)
 {
-	if (ft_lexing(data))
-		return (1);
+	
+	data->last_status = ft_lexing(data);
+	if (data->last_status) //1 malloc err, 2 syntax err
+		return (data->last_status);
+		
 	ft_print_tokens(data); //delete
 
-	if (ft_check_lexing(data)) //checking syntax for pipes and redir
+	if (ft_check_lexing(data)) //returns 2 if syntax err
+	{	
+		data->last_status = 2;
 		return (2);
-	
-	if (ft_parsing(data))
+	}
+	if (ft_parsing(data)) //return 1 if malloc err
+	{
+		data->last_status = 1;
 		return (1);
+	}
 	ft_print_cmd(data); //delete
 
 	return (0);
@@ -84,17 +92,19 @@ int	main(int argc, char **argv, char **envp)
 		if (*data.prompt) //don't store empty commands
 			add_history(data.prompt);
 			
-		data.last_status = ft_process_prompt(&data); //1 malloc err, 2 syntax err
-		
-		if (data.last_status == 1)
+		//data.last_status = ft_process_prompt(&data); //1 malloc err, 2 syntax err
+		ft_process_prompt(&data);
+		if (data.last_status == 1) //malloc error
 		{
 			ft_cleanup_exit(&data);
 			break ;
 		}
 		ft_cleanup_iteration(&data);
+		printf("LAST EXIT STATUS %d\n", data.last_status); //delete
+		data.last_status = 0; //change this (keep it until the next call)
 	}
-	clear_history(); //for MacOS
-	//rl_clear_history(); //for Linux
+	//clear_history(); //for MacOS
+	rl_clear_history(); //for Linux
 	return (data.last_status);
 }
 
@@ -110,7 +120,7 @@ int	main(int argc, char **argv, char **envp)
 			return(1);
 		}
 		
-		data.last_status = ft_process_prompt(&data); //1 malloc err, 2 syntax err
+		ft_process_prompt(&data);
 		
 		if (data.last_status == 1)
 		{
@@ -118,11 +128,8 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		ft_cleanup_iteration(&data);
-		
-
-		ft_free_cmds(&data);
-		ft_free_tokens(&data);
-		ft_free_prompt(&data);
+		printf("LAST EXIT STATUS %d\n", data.last_status); //delete
+		data.last_status = 0; //change this (keep it until the next call)
 		i++;
 	}
 	ft_free_env(&data);

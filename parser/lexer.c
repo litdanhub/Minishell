@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/09 13:34:32 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/09 17:07:12 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,16 +195,6 @@ int	ft_special_char(char c)
 	return (0);
 }
 
-static int	ft_unsupported_char(char c)
-{
-	if (c == '\\' || c == ';')
-	{
-		ft_print_error("syntax error: unclosed quotes");	
-		return (1);
-	}
-	return (0);
-}
-
 int	ft_quotes(char c, int *quotes)
 {
 	if (c == '\'' && *quotes == Q_NONE)
@@ -246,8 +236,8 @@ int	ft_token_word(t_data *data, char **cursor)
 		}
 		if (ft_special_char((*cursor)[i]) && quotes == Q_NONE)
 			break ;
-		if (ft_unsupported_char((*cursor)[i]) && quotes == Q_NONE)
-			break ;
+		if (quotes == Q_NONE && ((*cursor)[i] == '\\' || (*cursor)[i] == ';'))
+			return (ft_print_error("syntax error: unsupported character"), 2);
 		temp = ft_concan(word, (*cursor)[i]);
 		if (word)
 			free(word);
@@ -257,7 +247,7 @@ int	ft_token_word(t_data *data, char **cursor)
 		i++;
 	}
 	if (quotes == Q_SINGLE || quotes == Q_DOUBLE)
-		printf("ERROR\n");
+		return (free(word), ft_print_error("syntax error: unclosed quotes"), 2);
 	new_token = ft_new_token(word, T_WORD, quotes);
 	if (!new_token)
 		return (free(word), 1);
@@ -271,7 +261,7 @@ int	ft_token_word(t_data *data, char **cursor)
 int	ft_lexing(t_data *data)
 {
 	char	*cursor;
-
+	
 	cursor = data->prompt;
 	while (*cursor)
 	{
@@ -296,8 +286,9 @@ int	ft_lexing(t_data *data)
 		}
 		else
 		{
-			if (ft_token_word(data, &cursor)) //start a word token, sending an address of a right cursor of propmt
-				return (1);
+			data->last_status = ft_token_word(data, &cursor);
+			if (data->last_status) //1 malloc err, 2 syntax err
+				return (data->last_status);
 		}
 	}
 	return (0);
