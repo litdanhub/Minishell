@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/10 11:39:07 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/10 16:58:24 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ int	ft_process_prompt(t_data *data)
 		return (data->exit_code);
 		
 	ft_print_tokens(data); //delete
-
 	if (ft_check_lexing(data)) //returns 2 if syntax err
 	{	
 		data->exit_code = 2;
 		return (2);
 	}
+
 	if (ft_parsing(data)) //return 1 if malloc err
 	{
 		data->exit_code = 1;
@@ -79,7 +79,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_free_env(&data);
 		return(1);
 	}
-	ft_print_env(&data); //delete
+	//ft_print_env(&data); //delete
 	while (1)
 	{
 		printf("\n"); //delete
@@ -102,8 +102,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_cleanup_iteration(&data);
 		printf("-=EXIT CODE=- %d\n", data.exit_code); //delete
 	}
-	clear_history(); //for MacOS
-	//rl_clear_history(); //for Linux
+	//clear_history(); //for MacOS
+	rl_clear_history(); //for Linux
 	return (data.exit_code);
 }
 

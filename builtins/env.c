@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:58:36 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/25 11:50:12 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:43:05 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	ft_update_env_shlvl(t_data *data)
 		else
 			new_shlvl = ft_itoa(ft_atoi(node->value) + 1);
 		if (!new_shlvl)
-			return (1);
+			return (perror("minishell: malloc"), 1);
 		free(node->value);
 		node->value = new_shlvl;
 	}

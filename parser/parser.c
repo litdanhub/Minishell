@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/24 11:39:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/08 15:39:01 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/10 14:41:20 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	ft_first_pass(t_data *data)
 		i = ft_pars_count_pipes(&token);
 		argv = malloc (sizeof(char *) * (i + 1)); //allocate *argv for i words
 		if (!argv)
-			return (1);
+			return (perror("minishell: malloc"), 1);
 		while (i >= 0) //initializing argv[i] with NULL
 		{
 			argv[i] = NULL;
@@ -112,7 +112,7 @@ static int	ft_pars_alloc_argv_redir(t_token **token, int *i, t_cmd **cmd) //allo
 		{
 			(*cmd)->argv[*i] = ft_strdup((*token)->value);
 			if (!(*cmd)->argv[*i])
-				return (1);
+				return (perror("minishell: malloc"), 1);
 			(*i)++;
 		}
 		*token = (*token)->next;

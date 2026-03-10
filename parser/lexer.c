@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/10 11:47:57 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/10 17:34:26 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,13 +223,15 @@ int	ft_token_word(t_data *data, char **cursor)
 	char	*temp;
 	t_token	*new_token;
 	int		quotes;
-	char	*exit_code;
+	char	*str_exit_code;
+	int		expans;
 
 	i = 0;
+	expans = 0;
 	quotes = Q_NONE;
 	word = NULL;
 	temp = NULL;
-	exit_code = NULL;
+	str_exit_code = NULL;
 	while ((*cursor)[i])
 	{
 		if (ft_quotes((*cursor)[i], &quotes))
@@ -237,33 +239,43 @@ int	ft_token_word(t_data *data, char **cursor)
 			i++;
 			continue ;
 		}
-		if (quotes != Q_SINGLE && (*cursor)[i] =='$') //if Q_NONE or Q_DOUBLE
+		if (quotes != Q_SINGLE && (*cursor)[i] =='$') //expansion
 		{
-			if ((*cursor)[++i] =='?')
-			{
-				exit_code = ft_itoa(data->exit_code);
-				printf("STATUS AT READING %d\n", data->exit_code); //delete
-
-				if (!exit_code)
-					return (free(word), 1);
-				if (!word)
-					word = exit_code;
-				else
-				{	temp = ft_strjoin(word, exit_code);
-					free(word);
-					free(exit_code);
-					if (!temp)
-						return (perror("minishell: malloc"), 1);
-				}
+			expans = 1;
+			i++;
+			continue ;
+		}
+		if (expans == 1 && (*cursor)[i] =='?') //$?
+		{
+			str_exit_code = ft_itoa(data->exit_code);
+			if (!str_exit_code)
+				return (perror("minishell: malloc"), free(word), 1);
+			if (!word)
+				word = str_exit_code;
+			else
+			{	temp = ft_strjoin(word, str_exit_code);
+				free(word);
+				free(str_exit_code);
+				if (!temp)
+					return (perror("minishell: malloc"), 1);
 			}
 			i++;
 			continue ;
 		}
+		if (expans == 1 && (*cursor)[i] == 0) check that
+		{
+			printf("22222222222\n");
+			expans = 0;
+			i--;
+			continue ;
+		}
+		if (expans == 1)
+		
 		
 		if (ft_special_char((*cursor)[i]) && quotes == Q_NONE)
 			break ;
 		if (quotes == Q_NONE && ((*cursor)[i] == '\\' || (*cursor)[i] == ';'))
-			return (ft_print_error("syntax error: unsupported character"), 2); change exit stat here
+			return (ft_print_error("syntax error: unsupported character"), 2);
 		temp = ft_concan(word, (*cursor)[i]);
 		free(word);
 		if (!temp)
@@ -271,6 +283,8 @@ int	ft_token_word(t_data *data, char **cursor)
 		word = temp;
 		i++;
 	}
+
+	
 	if (quotes == Q_SINGLE || quotes == Q_DOUBLE)
 		return (free(word), ft_print_error("syntax error: unclosed quotes"), 2);
 	new_token = ft_new_token(word, T_WORD, quotes);
@@ -286,6 +300,7 @@ int	ft_token_word(t_data *data, char **cursor)
 int	ft_lexing(t_data *data)
 {
 	char	*cursor;
+	int		exit_status;
 	
 	cursor = data->prompt;
 	while (*cursor)
@@ -311,10 +326,9 @@ int	ft_lexing(t_data *data)
 		}
 		else
 		{
-			data->last_status = ft_token_word(data, &cursor); dont change exit stat here
-			printf("STATUS after exec ft_token_word %d\n", data->last_status);
-			if (data->last_status) //1 malloc err, 2 syntax err
-				return (data->last_status);
+			exit_status = ft_token_word(data, &cursor);
+			if (exit_status) //1 malloc err, 2 syntax err
+				return (exit_status);
 		}
 	}
 	return (0);
