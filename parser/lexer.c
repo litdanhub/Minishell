@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/09 17:07:12 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/10 11:47:57 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -214,6 +214,7 @@ int	ft_quotes(char c, int *quotes)
 	}
 	return (0);
 }
+//echo "Hello $USER" 'and $USER'
 
 int	ft_token_word(t_data *data, char **cursor)
 {
@@ -222,11 +223,13 @@ int	ft_token_word(t_data *data, char **cursor)
 	char	*temp;
 	t_token	*new_token;
 	int		quotes;
+	char	*exit_code;
 
 	i = 0;
 	quotes = Q_NONE;
 	word = NULL;
 	temp = NULL;
+	exit_code = NULL;
 	while ((*cursor)[i])
 	{
 		if (ft_quotes((*cursor)[i], &quotes))
@@ -234,13 +237,35 @@ int	ft_token_word(t_data *data, char **cursor)
 			i++;
 			continue ;
 		}
+		if (quotes != Q_SINGLE && (*cursor)[i] =='$') //if Q_NONE or Q_DOUBLE
+		{
+			if ((*cursor)[++i] =='?')
+			{
+				exit_code = ft_itoa(data->exit_code);
+				printf("STATUS AT READING %d\n", data->exit_code); //delete
+
+				if (!exit_code)
+					return (free(word), 1);
+				if (!word)
+					word = exit_code;
+				else
+				{	temp = ft_strjoin(word, exit_code);
+					free(word);
+					free(exit_code);
+					if (!temp)
+						return (perror("minishell: malloc"), 1);
+				}
+			}
+			i++;
+			continue ;
+		}
+		
 		if (ft_special_char((*cursor)[i]) && quotes == Q_NONE)
 			break ;
 		if (quotes == Q_NONE && ((*cursor)[i] == '\\' || (*cursor)[i] == ';'))
-			return (ft_print_error("syntax error: unsupported character"), 2);
+			return (ft_print_error("syntax error: unsupported character"), 2); change exit stat here
 		temp = ft_concan(word, (*cursor)[i]);
-		if (word)
-			free(word);
+		free(word);
 		if (!temp)
 			return (1);
 		word = temp;
@@ -286,7 +311,8 @@ int	ft_lexing(t_data *data)
 		}
 		else
 		{
-			data->last_status = ft_token_word(data, &cursor);
+			data->last_status = ft_token_word(data, &cursor); dont change exit stat here
+			printf("STATUS after exec ft_token_word %d\n", data->last_status);
 			if (data->last_status) //1 malloc err, 2 syntax err
 				return (data->last_status);
 		}
