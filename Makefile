@@ -4,8 +4,8 @@ CC = cc
 #libc readline function leaks. To suppress these leaks run with --suppressions=readline.supp
 #don't use fsanitize with valgrind
 
-#CFLAGS = -Wall -Wextra -Werror -g #delete g flag
-CFLAGS = -Wall -Wextra -Werror -g3 -O0 -fsanitize=address,undefined -fno-omit-frame-pointer
+CFLAGS = -Wall -Wextra -Werror -g #delete g flag
+#CFLAGS = -Wall -Wextra -Werror -g3 -O0 -fsanitize=address,undefined -fno-omit-frame-pointer
 
 #FILES
 PARSER_DIR = parser/

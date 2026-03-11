@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/11 13:36:59 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/11 18:01:18 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,33 +161,6 @@ int	ft_token_pipe(t_data *data, char **cursor)
 	return (0);
 }
 
-static char	*ft_concan_char(char *str, char c) //concatenating each char
-{
-	char	*new_str;
-	int		i;
-	int		len;
-	
-	new_str = NULL;
-	if (!str)
-	{
-		new_str = malloc (sizeof(char) * (1 + 1));
-		if (!new_str)
-			return (perror("minishell: malloc"), NULL);
-		new_str[0] = c;
-		new_str[1] = '\0';
-		return (new_str);
-	}
-	len = ft_strlen(str);
-	new_str = malloc (sizeof(char) * (len + 1 + 1));
-	if (!new_str)
-		return (perror("minishell: malloc"), NULL);
-	i = -1;
-	while (++i < len)
-		new_str[i] = str[i];
-	new_str[i] = c;
-	new_str[i + 1] = '\0';
-	return (new_str);
-}
 
 int	ft_special_char(char c)
 {
@@ -216,7 +189,37 @@ int	ft_quotes(char c, int *quotes)
 	return (0);
 }
 
-static char	*ft_concan_word(char *word, char *str)
+
+static char	*ft_append_char(char *word, char c) //append each char
+{
+	char	*new_word;
+	int		i;
+	int		len;
+	
+	new_word = NULL;
+	if (!word)
+	{
+		new_word = malloc (sizeof(char) * (1 + 1));
+		if (!new_word)
+			return (perror("minishell: malloc"), NULL);
+		new_word[0] = c;
+		new_word[1] = '\0';
+		return (new_word);
+	}
+	len = ft_strlen(word);
+	new_word = malloc (sizeof(char) * (len + 1 + 1));
+	if (!new_word)
+		return (free(word), perror("minishell: malloc"), NULL);
+	i = -1;
+	while (++i < len)
+		new_word[i] = word[i];
+	new_word[i] = c;
+	new_word[i + 1] = '\0';
+	free(word);
+	return (new_word);
+}
+
+static char	*ft_append_word(char *word, char *str)
 {
 	char	*temp;
 	
@@ -241,7 +244,6 @@ int	ft_token_word(t_data *data, char **cursor)
 	char	*temp;
 	t_token	*new_token;
 	int		quotes;
-	char	*str_exit_code;
 	t_env	*env;
 	char	*key;
 
@@ -250,7 +252,6 @@ int	ft_token_word(t_data *data, char **cursor)
 	word = NULL;
 	temp = NULL;
 	key = NULL;
-	str_exit_code = NULL;
 	while ((*cursor)[i])
 	{
 		if (ft_quotes((*cursor)[i], &quotes))
@@ -262,10 +263,10 @@ int	ft_token_word(t_data *data, char **cursor)
 		{
 			if ((*cursor)[i + 1] == '?') //$?
 			{
-				str_exit_code = ft_itoa(data->exit_code);
-				if (!str_exit_code)
+				temp = ft_itoa(data->exit_code);
+				if (!temp)
 					return (perror("minishell: malloc"), free(word), 1);
-				word = ft_concan_word(word, str_exit_code);
+				word = ft_append_word(word, temp);
 				if (!word)
 					return (1);
 				i += 2;
@@ -273,42 +274,37 @@ int	ft_token_word(t_data *data, char **cursor)
 			}
 			else if ((*cursor)[i + 1] == '$') //$$
 			{
-				use ft_concan_word() here
 				temp = ft_strdup("$$");
-				free (word);
 				if (!temp)
-					return (perror("minishell: malloc"), 1);
-				word = temp;
+					return (perror("minishell: malloc"), free(word), 1);
+				word = ft_append_word(word, temp);
+				if (!word)
+					return (1);
 				i += 2;
 				continue ;
 
 			}
-			else if (ft_isalpha((*cursor)[i + 1]) || (*cursor)[i + 1] == '_') //expansion var
+			else if (ft_isalpha((*cursor)[i + 1]) || (*cursor)[i + 1] == '_') //var expansion
 			{
 				i++;
 				while ((*cursor)[i] && (ft_isalpha((*cursor)[i]) || ft_isdigit((*cursor)[i]) || (*cursor)[i] == '_'))
 				{
-					temp = ft_concan_char(word, (*cursor)[i]);
-					free (word);
-					if (!temp)
+					key = ft_append_char(key, (*cursor)[i]);
+					if (!key)
 						return (1);
-					word = temp;
 					i++;
 				}
-				env = ft_env_search_key(data, word);
-				free(word);
-				if (!env) //value not found
+				env = ft_env_search_key(data, key);
+				free(key);
+				key = NULL;
+				if (env) //value is found
 				{
-					//temp = ft_strjoin()
-					word = ft_strdup("");	
+					temp = ft_strdup(env->value);
+					if (!temp)
+						return (perror("minishell: malloc"), free(word), 1);
+					word = ft_append_word(word, temp);
 					if (!word)
-						return (perror("minishell: malloc"), 1);
-				}
-				else
-				{	
-					word = ft_strdup(env->value);
-					if (!word)
-						return (perror("minishell: malloc"), 1);
+						return (1);
 				}
 				continue ;
 			}
@@ -317,17 +313,21 @@ int	ft_token_word(t_data *data, char **cursor)
 			break ;
 		if (quotes == Q_NONE && ((*cursor)[i] == '\\' || (*cursor)[i] == ';'))
 			return (ft_print_error("syntax error: unsupported character"), 2);
-		temp = ft_concan_char(word, (*cursor)[i]);
-		free(word);
-		if (!temp)
+		word = ft_append_char(word, (*cursor)[i]);
+		if (!word)
 			return (1);
-		word = temp;
 		i++;
 	}
 
 	
 	if (quotes == Q_SINGLE || quotes == Q_DOUBLE)
 		return (free(word), ft_print_error("syntax error: unclosed quotes"), 2);
+	if (!word)
+	{
+		word = ft_strdup("");
+		if (!word)
+			return (perror("minishell: malloc"), 1);
+	}
 	new_token = ft_new_token(word, T_WORD, quotes);
 	if (!new_token)
 		return (free(word), 1);
