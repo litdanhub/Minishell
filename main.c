@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/10 16:58:24 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/11 19:27:48 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,7 +112,7 @@ int	main(int argc, char **argv, char **envp)
 	int		i = 0;
 	while (i < 30)
 	{
-		data.prompt = ft_strdup("echo \"Hello world\" | 'grep H' | wc -l");
+		data.prompt = ft_strdup("echo \"Hello world\" | $USER $eeee 111$USER1111 | wc -l");
 		if (!data.prompt)
 		{
 			ft_cleanup_exit(&data);

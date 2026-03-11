@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/11 18:01:18 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/11 18:30:02 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -324,7 +324,7 @@ int	ft_token_word(t_data *data, char **cursor)
 		return (free(word), ft_print_error("syntax error: unclosed quotes"), 2);
 	if (!word)
 	{
-		word = ft_strdup("");
+		word = ft_strdup(""); //or *cursor += i; return (0); instead of empty line
 		if (!word)
 			return (perror("minishell: malloc"), 1);
 	}
