@@ -6,12 +6,13 @@
 /*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/10 17:34:26 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/11 13:36:59 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 #include "../utils/utils.h"
+#include "../builtins/builtins.h"
 
 void	ft_print_tokens(t_data *data) //delete after use
 {
@@ -160,7 +161,7 @@ int	ft_token_pipe(t_data *data, char **cursor)
 	return (0);
 }
 
-static char	*ft_concan(char *str, char c) //concatenating each char
+static char	*ft_concan_char(char *str, char c) //concatenating each char
 {
 	char	*new_str;
 	int		i;
@@ -214,7 +215,24 @@ int	ft_quotes(char c, int *quotes)
 	}
 	return (0);
 }
-//echo "Hello $USER" 'and $USER'
+
+static char	*ft_concan_word(char *word, char *str)
+{
+	char	*temp;
+	
+	if (!word)
+		word = str;
+	else
+	{	
+		temp = ft_strjoin(word, str);
+		free(word);
+		free(str);
+		if (!temp)
+			return (perror("minishell: malloc"), NULL);
+		word = temp;
+	}
+	return (word);
+}
 
 int	ft_token_word(t_data *data, char **cursor)
 {
@@ -224,13 +242,14 @@ int	ft_token_word(t_data *data, char **cursor)
 	t_token	*new_token;
 	int		quotes;
 	char	*str_exit_code;
-	int		expans;
+	t_env	*env;
+	char	*key;
 
 	i = 0;
-	expans = 0;
 	quotes = Q_NONE;
 	word = NULL;
 	temp = NULL;
+	key = NULL;
 	str_exit_code = NULL;
 	while ((*cursor)[i])
 	{
@@ -241,42 +260,64 @@ int	ft_token_word(t_data *data, char **cursor)
 		}
 		if (quotes != Q_SINGLE && (*cursor)[i] =='$') //expansion
 		{
-			expans = 1;
-			i++;
-			continue ;
-		}
-		if (expans == 1 && (*cursor)[i] =='?') //$?
-		{
-			str_exit_code = ft_itoa(data->exit_code);
-			if (!str_exit_code)
-				return (perror("minishell: malloc"), free(word), 1);
-			if (!word)
-				word = str_exit_code;
-			else
-			{	temp = ft_strjoin(word, str_exit_code);
-				free(word);
-				free(str_exit_code);
+			if ((*cursor)[i + 1] == '?') //$?
+			{
+				str_exit_code = ft_itoa(data->exit_code);
+				if (!str_exit_code)
+					return (perror("minishell: malloc"), free(word), 1);
+				word = ft_concan_word(word, str_exit_code);
+				if (!word)
+					return (1);
+				i += 2;
+				continue ;
+			}
+			else if ((*cursor)[i + 1] == '$') //$$
+			{
+				use ft_concan_word() here
+				temp = ft_strdup("$$");
+				free (word);
 				if (!temp)
 					return (perror("minishell: malloc"), 1);
+				word = temp;
+				i += 2;
+				continue ;
+
 			}
-			i++;
-			continue ;
+			else if (ft_isalpha((*cursor)[i + 1]) || (*cursor)[i + 1] == '_') //expansion var
+			{
+				i++;
+				while ((*cursor)[i] && (ft_isalpha((*cursor)[i]) || ft_isdigit((*cursor)[i]) || (*cursor)[i] == '_'))
+				{
+					temp = ft_concan_char(word, (*cursor)[i]);
+					free (word);
+					if (!temp)
+						return (1);
+					word = temp;
+					i++;
+				}
+				env = ft_env_search_key(data, word);
+				free(word);
+				if (!env) //value not found
+				{
+					//temp = ft_strjoin()
+					word = ft_strdup("");	
+					if (!word)
+						return (perror("minishell: malloc"), 1);
+				}
+				else
+				{	
+					word = ft_strdup(env->value);
+					if (!word)
+						return (perror("minishell: malloc"), 1);
+				}
+				continue ;
+			}
 		}
-		if (expans == 1 && (*cursor)[i] == 0) check that
-		{
-			printf("22222222222\n");
-			expans = 0;
-			i--;
-			continue ;
-		}
-		if (expans == 1)
-		
-		
 		if (ft_special_char((*cursor)[i]) && quotes == Q_NONE)
 			break ;
 		if (quotes == Q_NONE && ((*cursor)[i] == '\\' || (*cursor)[i] == ';'))
 			return (ft_print_error("syntax error: unsupported character"), 2);
-		temp = ft_concan(word, (*cursor)[i]);
+		temp = ft_concan_char(word, (*cursor)[i]);
 		free(word);
 		if (!temp)
 			return (1);
