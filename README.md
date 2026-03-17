@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by dsalimov, mfekhar.*
+*This project has been created as part of the 42 curriculum by dsalimov.*
 
 #FOR OUR USE
 
@@ -36,7 +36,7 @@ Responsible for:
 - redirections
 - heredoc execution (maybe I can do this?)
 - builtins execution (done: pwd, env) //$_ shall be updated after each successful command or its last argument
-- env list structure (almost done)
+- env list structure (done)
 - exit status handling
 - signals (execution side)
 

@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/10 11:40:11 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/16 16:59:09 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_redir
 {
 	t_token_type	type;// IN / OUT / APPEND / HEREDOC
 	char			*target;// filename or delimiter
+	int				quoted; //if !0 (quoted), don't expand inside HEREDOC
 	struct s_redir	*next;
 }	t_redir;
 
@@ -70,7 +71,7 @@ typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
-	t_quote_type	quote; //do i use it?
+	t_quote_type	quote; //only for heredoc: 1 - dont expand, 0 - expand
 	struct s_token	*next;
 }	t_token;
 

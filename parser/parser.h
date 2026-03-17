@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:19:39 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/08 15:19:48 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/16 16:59:53 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int		ft_parsing(t_data *data);
 void	ft_print_cmd(t_data *data); //delete after use
 
 //parser_utils.c
-t_redir	*ft_new_redir(char *value, t_token_type type);
+t_redir	*ft_new_redir(char *value, t_token_type type, int quotes);
 void	ft_add_redir_node(t_redir **redir, t_redir *new_node);
 t_cmd	*ft_new_cmd(char **argv);
 void	ft_add_cmd_node(t_cmd **cmd, t_cmd *new_node);

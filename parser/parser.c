@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/24 11:39:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/10 14:41:20 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/16 16:56:21 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	ft_print_cmd(t_data *data) //delete after use
 			redir = cmd->redirs;
 			while(redir)
 			{
-				printf("Type %d Target %s\n", redir->type, redir->target);
+				printf("Type: %d Target: %s Quoted: %d\n", redir->type, redir->target, redir->quoted);
 				redir = redir->next;
 			}
 			printf("\n");
@@ -103,7 +103,7 @@ static int	ft_pars_alloc_argv_redir(t_token **token, int *i, t_cmd **cmd) //allo
 		{
 			temp_type = (*token)->type;
 			*token = (*token)->next; // skip to WORD, and it will be skiped again in the end of the loop
-			new_redir = ft_new_redir((*token)->value, temp_type);
+			new_redir = ft_new_redir((*token)->value, temp_type, (*token)->quote);
 			if (!new_redir)
 				return (1);
 			ft_add_redir_node(&(*cmd)->redirs, new_redir);

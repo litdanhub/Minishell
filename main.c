@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/11 19:27:48 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/12 17:05:47 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,8 @@ int	ft_process_prompt(t_data *data)
 		return (1);
 	}
 	ft_print_cmd(data); //delete
+	
+	
 
 	return (0);
 }
@@ -102,8 +104,8 @@ int	main(int argc, char **argv, char **envp)
 		ft_cleanup_iteration(&data);
 		printf("-=EXIT CODE=- %d\n", data.exit_code); //delete
 	}
-	//clear_history(); //for MacOS
-	rl_clear_history(); //for Linux
+	clear_history(); //for MacOS
+	//rl_clear_history(); //for Linux
 	return (data.exit_code);
 }
 

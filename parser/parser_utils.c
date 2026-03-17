@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   parser_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 16:47:30 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/27 16:50:24 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/16 16:57:39 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parser.h"
 
-t_redir	*ft_new_redir(char *value, t_token_type type)
+t_redir	*ft_new_redir(char *value, t_token_type type, int quotes)
 {
 	t_redir	*new;
 
@@ -21,6 +21,7 @@ t_redir	*ft_new_redir(char *value, t_token_type type)
 		return (perror("minishell: malloc"), NULL);
 	new->type = type;
 	new->target = value;
+	new->quoted = quotes; //if 0 don't expand in heredoc
 	new->next = NULL;
 	return (new);
 }

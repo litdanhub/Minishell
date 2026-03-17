@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/11 18:30:02 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/16 16:48:18 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ int	ft_special_char(char c)
 	return (0);
 }
 
-int	ft_quotes(char c, int *quotes)
+int	ft_quotes(char c, int *quotes, int *quotes_status)
 {
 	if (c == '\'' && *quotes == Q_NONE)
 	{	
@@ -181,9 +181,16 @@ int	ft_quotes(char c, int *quotes)
 		*quotes = Q_DOUBLE;	
 		return (1);
 	}
-	else if ((c == '\'' && *quotes == Q_SINGLE) || (c == '"' && *quotes == Q_DOUBLE))
+	else if (c == '\'' && *quotes == Q_SINGLE)
 	{	
 		*quotes = Q_NONE;	
+		*quotes_status = Q_SINGLE;
+		return (1);
+	}
+	else if (c == '"' && *quotes == Q_DOUBLE)
+	{	
+		*quotes = Q_NONE;
+		*quotes_status = Q_DOUBLE;
 		return (1);
 	}
 	return (0);
@@ -243,23 +250,36 @@ int	ft_token_word(t_data *data, char **cursor)
 	char	*word;
 	char	*temp;
 	t_token	*new_token;
+	t_token *last_token;
 	int		quotes;
+	int		quotes_status;
+	int		heredoc;
 	t_env	*env;
 	char	*key;
 
 	i = 0;
+	heredoc = 0;
+	quotes_status = Q_NONE;
 	quotes = Q_NONE;
 	word = NULL;
 	temp = NULL;
 	key = NULL;
+	last_token = data->tokens;
+	while (last_token)
+	{
+		if (!last_token->next && last_token->type == T_HEREDOC)
+			heredoc = 1;
+		last_token = last_token->next;
+	}
+	
 	while ((*cursor)[i])
 	{
-		if (ft_quotes((*cursor)[i], &quotes))
-		{	
+		if (ft_quotes((*cursor)[i], &quotes, &quotes_status))
+		{
 			i++;
 			continue ;
 		}
-		if (quotes != Q_SINGLE && (*cursor)[i] =='$') //expansion
+		if (!heredoc && quotes != Q_SINGLE && (*cursor)[i] =='$') //expansion if not EOF delimiter
 		{
 			if ((*cursor)[i + 1] == '?') //$?
 			{
@@ -328,7 +348,7 @@ int	ft_token_word(t_data *data, char **cursor)
 		if (!word)
 			return (perror("minishell: malloc"), 1);
 	}
-	new_token = ft_new_token(word, T_WORD, quotes);
+	new_token = ft_new_token(word, T_WORD, quotes_status);
 	if (!new_token)
 		return (free(word), 1);
 	ft_add_token_node(&data->tokens, new_token);
