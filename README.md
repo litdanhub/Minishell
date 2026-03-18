@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by dsalimov.*
+*This project has been created as part of the 42 curriculum by dsalimov, mfekhar*
 
 #FOR OUR USE
 
@@ -34,7 +34,7 @@ Responsible for:
 - execve
 - dup2
 - redirections
-- heredoc execution (maybe I can do this?)
+- heredoc execution
 - builtins execution (done: pwd, env) //$_ shall be updated after each successful command or its last argument
 - env list structure (done)
 - exit status handling
@@ -81,4 +81,3 @@ cmd2->next = NULL;
 void ft_init(t_data *data) - initializing variables
 void ft_print_error(char *msg) - for printing error msgs 
 t_env *ft_env_search_key(t_data *data, char *search); //searches for KEY in env and returns *node
-

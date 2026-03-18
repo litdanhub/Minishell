@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/24 11:39:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/16 16:56:21 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/17 09:15:56 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,12 +61,11 @@ static int	ft_pars_count_pipes(t_token **token)
 	return (i);
 }
 
-static int	ft_first_pass(t_data *data)
+static int	ft_first_pass(t_data *data, int i)
 {
 	t_token			*token;
 	t_cmd			*new_cmd;
 	char			**argv;
-	int				i;
 
 	token = data->tokens;
 	while (token) //count PIPES and allocate mem for argv[i]
@@ -126,7 +125,8 @@ int	ft_parsing(t_data *data) //the rule is always < > << >> and file/EOF
 	int				i;
 	t_cmd			*cmd;
 
-	if (ft_first_pass(data))
+	i = 0;
+	if (ft_first_pass(data, i))
 		return (1);
 	token = data->tokens;
 	cmd = data->cmds;

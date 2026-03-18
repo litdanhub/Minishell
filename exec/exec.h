@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:21:32 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/22 19:18:08 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/18 12:53:49 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,5 @@
 # define EXEC_H
 
 # include "../minishell.h"
-
-//prototyping
-
-
 
 #endif

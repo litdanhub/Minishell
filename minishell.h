@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:54:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/16 16:59:09 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/18 09:49:17 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@
 # include <errno.h> //perror
 # include <signal.h> //signal
 # include <limits.h> //PATH_MAX
+
+
 
 typedef enum e_token_type
 {

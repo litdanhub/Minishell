@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   free.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/20 16:52:23 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/27 16:43:29 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/18 11:45:20 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ void	ft_free_cmds(t_data *data)
 				free(current->argv[i]); //free value allocation
 			i++;
 		}
+		if (current->path)
+			free(current->path);
 		ft_free_redirs(current);
 		free(current->argv); //free *argv
 		free(current); //free the struct node itself

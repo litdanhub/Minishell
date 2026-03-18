@@ -6,12 +6,12 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/12 17:05:47 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/18 12:58:03 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser/parser.h"
+#include "parser/parser.h" //do i need all headers here?
 #include "exec/exec.h"
 #include "builtins/builtins.h"
 #include "utils/utils.h"
@@ -45,7 +45,6 @@ void	ft_print_env(t_data *data) //delete after use
 
 int	ft_process_prompt(t_data *data)
 {
-	
 	data->exit_code = ft_lexing(data);
 	if (data->exit_code) //1 malloc err, 2 syntax err
 		return (data->exit_code);
@@ -64,8 +63,6 @@ int	ft_process_prompt(t_data *data)
 	}
 	ft_print_cmd(data); //delete
 	
-	
-
 	return (0);
 }
 
@@ -81,7 +78,7 @@ int	main(int argc, char **argv, char **envp)
 		ft_free_env(&data);
 		return(1);
 	}
-	//ft_print_env(&data); //delete
+	ft_print_env(&data); //delete
 	while (1)
 	{
 		printf("\n"); //delete
@@ -94,13 +91,13 @@ int	main(int argc, char **argv, char **envp)
 		if (*data.prompt) //don't store empty commands
 			add_history(data.prompt);
 			
-		//data.last_status = ft_process_prompt(&data); //1 malloc err, 2 syntax err
 		ft_process_prompt(&data);
 		if (data.exit_code == 1) //malloc error
 		{
 			ft_cleanup_exit(&data);
 			break ;
 		}
+		
 		ft_cleanup_iteration(&data);
 		printf("-=EXIT CODE=- %d\n", data.exit_code); //delete
 	}

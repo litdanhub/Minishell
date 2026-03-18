@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/16 16:48:18 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/17 11:04:17 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -344,9 +344,11 @@ int	ft_token_word(t_data *data, char **cursor)
 		return (free(word), ft_print_error("syntax error: unclosed quotes"), 2);
 	if (!word)
 	{
-		word = ft_strdup(""); //or *cursor += i; return (0); instead of empty line
-		if (!word)
-			return (perror("minishell: malloc"), 1);
+		//word = ft_strdup(""); //empty line or nothing??? if "" then after | creates another token (|, "", |) instead ||
+		//if (!word)
+		//	return (perror("minishell: malloc"), 1);
+		*cursor += i;
+		return (0);
 	}
 	new_token = ft_new_token(word, T_WORD, quotes_status);
 	if (!new_token)
@@ -356,7 +358,6 @@ int	ft_token_word(t_data *data, char **cursor)
 	*cursor += i;
 	return (0);
 }
-
 
 int	ft_lexing(t_data *data)
 {
@@ -370,21 +371,12 @@ int	ft_lexing(t_data *data)
 			cursor++;
 		if (!*cursor)
 			break ;
-		if (*cursor == '|')
-		{
-			if (ft_token_pipe(data, &cursor)) //start a pipe token
-				return (1);
-		}
-		else if (*cursor == '<')
-		{
-			if (ft_token_redir_in(data, &cursor)) //start a redirect IN or HEREDOC token
-				return (1);
-		}
-		else if (*cursor == '>')
-		{
-			if (ft_token_redir_out(data, &cursor)) //start a redirect OUT or APPEND token
-				return (1);
-		}
+		if (*cursor == '|' && ft_token_pipe(data, &cursor)) //start a pipe token
+			return (1);
+		else if (*cursor == '<' && ft_token_redir_in(data, &cursor)) //start a redirect IN or HEREDOC token
+			return (1);
+		else if (*cursor == '>' && ft_token_redir_out(data, &cursor)) //start a redirect OUT or APPEND token
+			return (1);
 		else
 		{
 			exit_status = ft_token_word(data, &cursor);
