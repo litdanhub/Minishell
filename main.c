@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/18 12:58:03 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/19 15:19:20 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int	main(int argc, char **argv, char **envp)
 			ft_cleanup_exit(&data);
 			break ;
 		}
+		
+		ft_heredoc(&data);
 		
 		ft_cleanup_iteration(&data);
 		printf("-=EXIT CODE=- %d\n", data.exit_code); //delete

@@ -25,10 +25,10 @@ UTILS_SRC = $(UTILS_DIR)utils.c \
 	$(UTILS_DIR)free.c \
 	$(UTILS_DIR)init.c
 
-#EXEC_DIR = exec/
-#EXEC_SRC = $(EXEC_DIR)
+EXEC_DIR = exec/
+EXEC_SRC = $(EXEC_DIR)heredoc.c
 
-SRCS = main.c $(PARSER_SRC) $(UTILS_SRC) $(BUILTINS_SRC) #$(EXEC_SRC)
+SRCS = main.c $(PARSER_SRC) $(UTILS_SRC) $(BUILTINS_SRC) $(EXEC_SRC)
 
 OBJS = $(SRCS:.c=.o)
 
