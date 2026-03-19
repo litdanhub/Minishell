@@ -9,8 +9,6 @@ Minishell has 5 main parts:
 4. Executor
 5. Builtins + Env management
 
-
-
 Person A — Parsing & Structure
 
 Responsible for:

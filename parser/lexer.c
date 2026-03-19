@@ -6,7 +6,7 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/17 11:04:17 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/19 14:07:51 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,23 +172,23 @@ int	ft_special_char(char c)
 int	ft_quotes(char c, int *quotes, int *quotes_status)
 {
 	if (c == '\'' && *quotes == Q_NONE)
-	{	
+	{
 		*quotes = Q_SINGLE;	
 		return (1);
 	}
 	else if (c == '"' && *quotes == Q_NONE)
-	{	
+	{
 		*quotes = Q_DOUBLE;	
 		return (1);
 	}
 	else if (c == '\'' && *quotes == Q_SINGLE)
-	{	
+	{
 		*quotes = Q_NONE;	
 		*quotes_status = Q_SINGLE;
 		return (1);
 	}
 	else if (c == '"' && *quotes == Q_DOUBLE)
-	{	
+	{
 		*quotes = Q_NONE;
 		*quotes_status = Q_DOUBLE;
 		return (1);
@@ -244,33 +244,90 @@ static char	*ft_append_word(char *word, char *str)
 	return (word);
 }
 
-int	ft_token_word(t_data *data, char **cursor)
+static int	ft_is_heredoc_delim(t_data *data)
 {
-	int		i;
-	char	*word;
-	char	*temp;
-	t_token	*new_token;
-	t_token *last_token;
-	int		quotes;
-	int		quotes_status;
-	int		heredoc;
-	t_env	*env;
-	char	*key;
+	t_token	*last_token;
 
-	i = 0;
-	heredoc = 0;
-	quotes_status = Q_NONE;
-	quotes = Q_NONE;
-	word = NULL;
-	temp = NULL;
-	key = NULL;
 	last_token = data->tokens;
 	while (last_token)
 	{
 		if (!last_token->next && last_token->type == T_HEREDOC)
-			heredoc = 1;
+			return (1);
 		last_token = last_token->next;
 	}
+	return (0);
+}
+
+static int	ft_expand_var(t_data *data, char **cursor, int *i, char **word)
+{
+	t_env	*env;
+	char	*temp;
+	char	*key;
+
+	key = NULL;
+	(*i)++;
+		while ((*cursor)[*i] && (ft_isalpha((*cursor)[*i]) || ft_isdigit((*cursor)[*i]) || (*cursor)[*i] == '_'))
+		{
+			key = ft_append_char(key, (*cursor)[*i]);
+			if (!key)
+				return (1);
+			(*i)++;
+		}
+		env = ft_env_search_key(data, key);
+		free(key);
+		if (env) // value is found
+		{
+			temp = ft_strdup(env->value);
+			if (!temp)
+				return (perror("minishell: malloc"), free(*word), 1);
+			*word = ft_append_word(*word, temp);
+			if (!*word)
+				return (1);
+		}
+	return (0);
+}
+
+static int	ft_expand(t_data *data, char **cursor, int *i, char **word)
+{
+	char	*temp;
+
+	temp = NULL;
+	if ((*cursor)[*i + 1] == '?') //$? expansion
+	{
+		temp = ft_itoa(data->exit_code);
+		if (!temp)
+			return (perror("minishell: malloc"), free(*word), 1);
+		*word = ft_append_word(*word, temp);
+		if (!*word)
+			return (1);
+		*i += 2;
+		return (2);
+	}
+	else if (ft_isalpha((*cursor)[*i + 1]) || (*cursor)[*i + 1] == '_') // regular var expansion
+	{
+		if (ft_expand_var(data, cursor, i, word))
+			return (1);
+		return (2);
+	}
+	return (0);
+}
+
+
+int	ft_token_word(t_data *data, char **cursor)
+{
+	//create new typdef for temp vars
+	
+	int		i;
+	char	*word;
+	t_token	*new_token;
+	int		quotes;
+	int		quotes_status;
+	int		expand_result;
+	
+	i = 0;
+	quotes_status = Q_NONE;
+	quotes = Q_NONE;
+	word = NULL;
 	
 	while ((*cursor)[i])
 	{
@@ -279,55 +336,13 @@ int	ft_token_word(t_data *data, char **cursor)
 			i++;
 			continue ;
 		}
-		if (!heredoc && quotes != Q_SINGLE && (*cursor)[i] =='$') //expansion if not EOF delimiter
+		if (!(ft_is_heredoc_delim(data)) && quotes != Q_SINGLE && (*cursor)[i] == '$' & (*cursor)[i + 1] != '$') //expansion if not EOF delimiter and not for heredoc
 		{
-			if ((*cursor)[i + 1] == '?') //$?
-			{
-				temp = ft_itoa(data->exit_code);
-				if (!temp)
-					return (perror("minishell: malloc"), free(word), 1);
-				word = ft_append_word(word, temp);
-				if (!word)
-					return (1);
-				i += 2;
-				continue ;
-			}
-			else if ((*cursor)[i + 1] == '$') //$$
-			{
-				temp = ft_strdup("$$");
-				if (!temp)
-					return (perror("minishell: malloc"), free(word), 1);
-				word = ft_append_word(word, temp);
-				if (!word)
-					return (1);
-				i += 2;
-				continue ;
-
-			}
-			else if (ft_isalpha((*cursor)[i + 1]) || (*cursor)[i + 1] == '_') //var expansion
-			{
-				i++;
-				while ((*cursor)[i] && (ft_isalpha((*cursor)[i]) || ft_isdigit((*cursor)[i]) || (*cursor)[i] == '_'))
-				{
-					key = ft_append_char(key, (*cursor)[i]);
-					if (!key)
-						return (1);
-					i++;
-				}
-				env = ft_env_search_key(data, key);
-				free(key);
-				key = NULL;
-				if (env) //value is found
-				{
-					temp = ft_strdup(env->value);
-					if (!temp)
-						return (perror("minishell: malloc"), free(word), 1);
-					word = ft_append_word(word, temp);
-					if (!word)
-						return (1);
-				}
-				continue ;
-			}
+			expand_result = ft_expand(data, cursor, &i, &word);
+			if (expand_result == 1) //malloc error
+				return (1);
+			else if (expand_result == 2)
+				continue ;	
 		}
 		if (ft_special_char((*cursor)[i]) && quotes == Q_NONE)
 			break ;
@@ -338,7 +353,6 @@ int	ft_token_word(t_data *data, char **cursor)
 			return (1);
 		i++;
 	}
-
 	
 	if (quotes == Q_SINGLE || quotes == Q_DOUBLE)
 		return (free(word), ft_print_error("syntax error: unclosed quotes"), 2);
