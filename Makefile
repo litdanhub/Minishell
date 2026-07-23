@@ -1,7 +1,7 @@
 NAME = minishell
 
 CC = cc
-#libc readline function leaks. To suppress these leaks run with --suppressions=readline.supp
+#libc readline function leaks. To suppress these leaks run valgrind with --suppressions=readline.supp
 #don't use fsanitize with valgrind
 
 #CFLAGS = -Wall -Wextra -Werror -g #delete g flag
@@ -32,11 +32,7 @@ SRCS = main.c $(PARSER_SRC) $(UTILS_SRC) $(BUILTINS_SRC) $(EXEC_SRC)
 
 OBJS = $(SRCS:.c=.o)
 
-HEADERS = minishell.h \
-	parser/parser.h \
-	exec/exec.h \
-	builtins/builtins.h \
-	utils/utils.h
+HEADERS = minishell.h
 
 #LIBRARIES
 LIBRL = -lreadline

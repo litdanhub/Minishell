@@ -1,6 +1,6 @@
-*This project has been created as part of the 42 curriculum by dsalimov, mfekhar*
+*This project has been created as part of the 42 curriculum by dsalimov*
 
-#FOR OUR USE
+#FOR INTERNAL USE
 
 Minishell has 5 main parts:
 1. Input & Signals

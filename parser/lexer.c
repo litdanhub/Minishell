@@ -6,13 +6,11 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/19 15:17:22 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/19 14:07:51 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/04/17 14:08:20 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
-#include "../utils/utils.h"
-#include "../builtins/builtins.h"
+#include "../minishell.h"
 
 void	ft_print_tokens(t_data *data) //delete after use
 {
@@ -197,7 +195,7 @@ int	ft_quotes(char c, int *quotes, int *quotes_status)
 }
 
 
-static char	*ft_append_char(char *word, char c) //append each char
+char	*ft_append_char(char *word, char c) //append each char
 {
 	char	*new_word;
 	int		i;
@@ -223,10 +221,11 @@ static char	*ft_append_char(char *word, char c) //append each char
 	new_word[i] = c;
 	new_word[i + 1] = '\0';
 	free(word);
+	word = NULL;
 	return (new_word);
 }
 
-static char	*ft_append_word(char *word, char *str)
+char	*ft_append_word(char *word, char *str)
 {
 	char	*temp;
 	
@@ -236,7 +235,9 @@ static char	*ft_append_word(char *word, char *str)
 	{	
 		temp = ft_strjoin(word, str);
 		free(word);
+		word = NULL;
 		free(str);
+		str = NULL;
 		if (!temp)
 			return (perror("minishell: malloc"), NULL);
 		word = temp;
@@ -258,7 +259,7 @@ static int	ft_is_heredoc_delim(t_data *data)
 	return (0);
 }
 
-static int	ft_expand_var(t_data *data, char **cursor, int *i, char **word)
+int	ft_expand_var(t_data *data, char **cursor, int *i, char **word)
 {
 	t_env	*env;
 	char	*temp;
@@ -266,28 +267,28 @@ static int	ft_expand_var(t_data *data, char **cursor, int *i, char **word)
 
 	key = NULL;
 	(*i)++;
-		while ((*cursor)[*i] && (ft_isalpha((*cursor)[*i]) || ft_isdigit((*cursor)[*i]) || (*cursor)[*i] == '_'))
-		{
-			key = ft_append_char(key, (*cursor)[*i]);
-			if (!key)
-				return (1);
-			(*i)++;
-		}
-		env = ft_env_search_key(data, key);
-		free(key);
-		if (env) // value is found
-		{
-			temp = ft_strdup(env->value);
-			if (!temp)
-				return (perror("minishell: malloc"), free(*word), 1);
-			*word = ft_append_word(*word, temp);
-			if (!*word)
-				return (1);
-		}
+	while ((*cursor)[*i] && (ft_isalpha((*cursor)[*i]) || ft_isdigit((*cursor)[*i]) || (*cursor)[*i] == '_'))
+	{
+		key = ft_append_char(key, (*cursor)[*i]);
+		if (!key)
+			return (1);
+		(*i)++;
+	}
+	env = ft_env_search_key(data, key);
+	free(key);
+	if (env) // value is found
+	{
+		temp = ft_strdup(env->value);
+		if (!temp)
+			return (perror("minishell: malloc"), free(*word), 1);
+		*word = ft_append_word(*word, temp);
+		if (!*word)
+			return (1);
+	}
 	return (0);
 }
 
-static int	ft_expand(t_data *data, char **cursor, int *i, char **word)
+int	ft_expand(t_data *data, char **cursor, int *i, char **word)
 {
 	char	*temp;
 
@@ -336,7 +337,7 @@ int	ft_token_word(t_data *data, char **cursor)
 			i++;
 			continue ;
 		}
-		if (!(ft_is_heredoc_delim(data)) && quotes != Q_SINGLE && (*cursor)[i] == '$' & (*cursor)[i + 1] != '$') //expansion if not EOF delimiter and not for heredoc
+		if (!(ft_is_heredoc_delim(data)) && quotes != Q_SINGLE && (*cursor)[i] == '$' && (*cursor)[i + 1] != '$') //expansion if not EOF delimiter and not for heredoc
 		{
 			expand_result = ft_expand(data, cursor, &i, &word);
 			if (expand_result == 1) //malloc error

@@ -6,11 +6,11 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 16:47:30 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/16 16:57:39 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/19 21:16:35 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../minishell.h"
 
 t_redir	*ft_new_redir(char *value, t_token_type type, int quotes)
 {

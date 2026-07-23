@@ -6,11 +6,11 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/24 11:39:47 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/17 09:15:56 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/19 21:16:38 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../minishell.h"
 
 void	ft_print_cmd(t_data *data) //delete after use
 {

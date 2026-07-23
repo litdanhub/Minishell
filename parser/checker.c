@@ -6,11 +6,11 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/27 18:39:33 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/18 10:10:46 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/19 21:16:29 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "parser.h"
+#include "../minishell.h"
 
 static int	ft_redir_flag(t_token *token) //if token is either REDIR
 {

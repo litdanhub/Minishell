@@ -6,11 +6,11 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 17:10:04 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/10 11:39:17 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/19 21:16:50 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.h"
+#include "../minishell.h"
 
 void	ft_init_data(t_data *data)
 {

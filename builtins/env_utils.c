@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   env_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: dsalimov <dsalimov@student.42vienna.com    +#+  +:+       +#+        */
+/*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/23 16:41:16 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/02/23 19:47:08 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/03/19 21:16:00 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "builtins.h"
+#include "../minishell.h"
 
 t_env	*ft_env_search_key(t_data *data, char *search) //searches for KEY in env and returns *node
 {

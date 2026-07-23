@@ -6,15 +6,11 @@
 /*   By: dsalimov <dsalimo@student.42vienna.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/11 11:46:18 by dsalimov          #+#    #+#             */
-/*   Updated: 2026/03/19 15:19:20 by dsalimov         ###   ########.fr       */
+/*   Updated: 2026/04/09 10:36:28 by dsalimov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-#include "parser/parser.h" //do i need all headers here?
-#include "exec/exec.h"
-#include "builtins/builtins.h"
-#include "utils/utils.h"
 
 void	ft_cleanup_exit(t_data *data)
 {
@@ -98,7 +94,11 @@ int	main(int argc, char **argv, char **envp)
 			break ;
 		}
 		
-		ft_heredoc(&data);
+		if (ft_heredoc(&data))
+		{
+			ft_cleanup_exit(&data);
+			break ;
+		}
 		
 		ft_cleanup_iteration(&data);
 		printf("-=EXIT CODE=- %d\n", data.exit_code); //delete
@@ -107,32 +107,3 @@ int	main(int argc, char **argv, char **envp)
 	//rl_clear_history(); //for Linux
 	return (data.exit_code);
 }
-
-/*
-/////////test for funcheck(instead of readline)/////////////
-	int		i = 0;
-	while (i < 30)
-	{
-		data.prompt = ft_strdup("echo \"Hello world\" | $USER $eeee 111$USER1111 | wc -l");
-		if (!data.prompt)
-		{
-			ft_cleanup_exit(&data);
-			return(1);
-		}
-		
-		ft_process_prompt(&data);
-		
-		if (data.exit_code == 1)
-		{
-			ft_cleanup_exit(&data);
-			break ;
-		}
-		ft_cleanup_iteration(&data);
-		printf("-=EXIT CODE=- %d\n", data.exit_code);
-		i++;
-	}
-	ft_free_env(&data);
-	return (data.exit_code);
-}
-////////////////////////////////////////////////////////
-*/
